@@ -20,8 +20,6 @@ public class Practice_2026_starterBot extends OpMode {
     Servo LeftFeeder;
     Servo RightFeeder;
 
-
-
     @Override
     public void init() {
         LeftMotor = hardwareMap.get(DcMotor.class,"leftMotor");

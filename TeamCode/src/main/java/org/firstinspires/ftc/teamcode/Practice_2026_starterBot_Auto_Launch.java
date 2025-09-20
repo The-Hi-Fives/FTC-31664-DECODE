@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @Autonomous
-public class Practice_2026_starterBot_Auto extends LinearOpMode {
+public class Practice_2026_starterBot_Auto_Launch extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -19,11 +19,11 @@ public class Practice_2026_starterBot_Auto extends LinearOpMode {
         Servo LeftFeeder;
         Servo RightFeeder;
 
-        LeftMotor = hardwareMap.get(DcMotor.class,"leftMotor");
-        RightMotor = hardwareMap.get(DcMotor.class,"rightMotor");
-        Launcher = hardwareMap.get(DcMotorEx.class,"launchMotor");
-        LeftFeeder = hardwareMap.get(Servo.class,"left_feeder");
-        RightFeeder = hardwareMap.get(Servo.class,"right_feeder");
+        LeftMotor = hardwareMap.get(DcMotor.class, "leftMotor");
+        RightMotor = hardwareMap.get(DcMotor.class, "rightMotor");
+        Launcher = hardwareMap.get(DcMotorEx.class, "launchMotor");
+        LeftFeeder = hardwareMap.get(Servo.class, "left_feeder");
+        RightFeeder = hardwareMap.get(Servo.class, "right_feeder");
 
         Launcher.setZeroPowerBehavior(BRAKE);
         LeftFeeder.setDirection(Servo.Direction.REVERSE);
@@ -49,40 +49,12 @@ public class Practice_2026_starterBot_Auto extends LinearOpMode {
 
         Launcher.setPower(0);
 
+        RightMotor.setPower(-1);
         LeftMotor.setPower(-1);
-        RightMotor.setPower(-1*0.95);
 
+        sleep(1500);
 
-        sleep(1900);
-
-        LeftMotor.setPower(0);
         RightMotor.setPower(0);
-
-        sleep(5000);
-
-        LeftMotor.setPower(1);
-        RightMotor.setPower(1*0.95);
-
-        sleep(2000);
-
         LeftMotor.setPower(0);
-        RightMotor.setPower(0);
-
-        Launcher.setPower(0.5);
-
-        sleep(2000);
-
-        for (int i = 1; i <= 3; i++) {
-
-            LeftFeeder.setPosition(0.4);
-            RightFeeder.setPosition(0.4);
-
-            sleep(800);
-
-            LeftFeeder.setPosition(0);
-            RightFeeder.setPosition(0);
-
-            sleep(500);
-        }
     }
 }
