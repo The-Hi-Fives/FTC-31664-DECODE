@@ -51,7 +51,31 @@ public class Practice_2026_starterBot extends OpMode {
             LeftFeeder.setPosition(0);
             RightFeeder.setPosition(0);
         }
-        //Hello World
+
+        // Get gamepad input
+        double drive = -gamepad1.left_stick_y; // Throttle (forward/backward)
+        double turn = gamepad1.right_stick_x; // Steering (left/right)
+
+        // Calculate motor powers for arcade drive
+        double leftPower = drive + turn;
+        double rightPower = drive - turn;
+
+        // Scale motor powers to prevent exceeding 1.0 (if necessary)
+        double maxPower = Math.max(Math.abs(leftPower), Math.abs(rightPower));
+        if (maxPower > 1.0) {
+            leftPower /= maxPower;
+            rightPower /= maxPower;
+            }
+
+        // Set motor powers
+        LeftMotor.setPower(leftPower);
+        RightMotor.setPower(rightPower);
+
+            // Optional: Add telemetry for debugging
+            //            telemetry.addData("Left Motor Power", leftPower);
+            //            telemetry.addData("Right Motor Power", rightPower);
+            //            ]telemetry.update();
+            //        }
 
 
     }
