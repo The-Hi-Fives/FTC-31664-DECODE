@@ -8,6 +8,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
+
 @TeleOp
 
 public class Practice_2026_starterBot extends OpMode {
@@ -25,6 +27,7 @@ public class Practice_2026_starterBot extends OpMode {
         Launcher = hardwareMap.get(DcMotorEx.class,"launchMotor");
         LeftFeeder = hardwareMap.get(Servo.class,"left_feeder");
         RightFeeder = hardwareMap.get(Servo.class,"right_feeder");
+        Launcher.setZeroPowerBehavior(BRAKE);
     }
 
     @Override
