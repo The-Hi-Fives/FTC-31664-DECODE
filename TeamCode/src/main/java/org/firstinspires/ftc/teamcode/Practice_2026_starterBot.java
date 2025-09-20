@@ -3,9 +3,12 @@ package org.firstinspires.ftc.teamcode;
 import java.lang.Math;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
+
+@TeleOp
 
 public class Practice_2026_starterBot extends OpMode {
 
@@ -31,7 +34,5 @@ public class Practice_2026_starterBot extends OpMode {
             RightFeeder.setPosition(300);
             Launcher.setPower(0.5);
         }
-
-
     }
 }
