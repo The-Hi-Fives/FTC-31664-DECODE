@@ -40,7 +40,7 @@ public class Practice_2026_starterBot extends OpMode {
 
         //Test
         if (gamepad1.a) {
-            Launcher.setPower(0.75);
+            Launcher.setPower(0.5);
         } else {
             Launcher.setPower(0);
         }
@@ -65,12 +65,11 @@ public class Practice_2026_starterBot extends OpMode {
         if (maxPower > 1.0) {
             leftPower /= maxPower;
             rightPower /= maxPower;
-            }
+        }
 
         // Set motor powers
         LeftMotor.setPower(leftPower);
         RightMotor.setPower(rightPower);
-
             // Optional: Add telemetry for debugging
             //            telemetry.addData("Left Motor Power", leftPower);
             //            telemetry.addData("Right Motor Power", rightPower);
