@@ -34,6 +34,10 @@ public class Practice_2026_starterBot extends OpMode {
             LeftFeeder.setPosition(300);
             RightFeeder.setPosition(300);
             Launcher.setPower(0.5);
+        } else {
+            LeftFeeder.setPosition(0);
+            RightFeeder.setPosition(0);
+            Launcher.setPower(0);
         }
     }
 }
