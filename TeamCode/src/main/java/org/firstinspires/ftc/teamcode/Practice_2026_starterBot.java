@@ -36,11 +36,9 @@ public class Practice_2026_starterBot extends OpMode {
 
     @Override
     public void loop() {
-
-
         //Test
         if (gamepad1.a) {
-            Launcher.setPower(0.5);
+            Launcher.setPower(0.45);
         } else {
             Launcher.setPower(0);
         }
@@ -52,7 +50,7 @@ public class Practice_2026_starterBot extends OpMode {
             RightFeeder.setPosition(0);
         }
 
-        // Get gamepad input
+        // Get game pad input
         double drive = -gamepad1.left_stick_y; // Throttle (forward/backward)
         double turn = gamepad1.right_stick_x; // Steering (left/right)
 
