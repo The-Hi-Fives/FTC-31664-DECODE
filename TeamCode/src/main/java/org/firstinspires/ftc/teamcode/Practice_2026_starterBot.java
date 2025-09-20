@@ -26,6 +26,6 @@ public class Practice_2026_starterBot extends OpMode {
 
     @Override
     public void loop() {
-        
+
     }
 }
