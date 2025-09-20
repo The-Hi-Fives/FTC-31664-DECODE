@@ -26,6 +26,12 @@ public class Practice_2026_starterBot extends OpMode {
 
     @Override
     public void loop() {
+        if (gamepad1.right_trigger > 0.6) {
+            LeftFeeder.setPosition(300);
+            RightFeeder.setPosition(300);
+            Launcher.setPower(0.5);
+        }
+
 
     }
 }
