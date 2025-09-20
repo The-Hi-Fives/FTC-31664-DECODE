@@ -29,6 +29,8 @@ public class Practice_2026_starterBot_Auto extends LinearOpMode {
         LeftFeeder.setDirection(Servo.Direction.REVERSE);
         RightMotor.setDirection(DcMotor.Direction.REVERSE);
 
+        waitForStart();
+
         Launcher.setPower(0.5);
 
         sleep(2000);
