@@ -20,6 +20,8 @@ public class Practice_2026_starterBot extends OpMode {
     Servo LeftFeeder;
     Servo RightFeeder;
 
+
+
     @Override
     public void init() {
         LeftMotor = hardwareMap.get(DcMotor.class,"leftMotor");
@@ -28,19 +30,28 @@ public class Practice_2026_starterBot extends OpMode {
         LeftFeeder = hardwareMap.get(Servo.class,"left_feeder");
         RightFeeder = hardwareMap.get(Servo.class,"right_feeder");
         Launcher.setZeroPowerBehavior(BRAKE);
+        LeftFeeder.setDirection(Servo.Direction.REVERSE);
+        RightMotor.setDirection(DcMotor.Direction.REVERSE);
     }
 
     @Override
     public void loop() {
+
+
         //Test
-        if (gamepad1.right_trigger > 0.6) {
-            LeftFeeder.setPosition(300);
-            RightFeeder.setPosition(300);
-            Launcher.setPower(0.5);
+        if (gamepad1.a) {
+            Launcher.setPower(0.75);
+        } else {
+            Launcher.setPower(0);
+        }
+        if (gamepad1.right_bumper) {
+            LeftFeeder.setPosition(1);
+            RightFeeder.setPosition(1);
         } else {
             LeftFeeder.setPosition(0);
             RightFeeder.setPosition(0);
-            Launcher.setPower(0);
         }
+
+
     }
 }
