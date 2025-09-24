@@ -35,14 +35,14 @@ public class Practice_2026_starterBot extends OpMode {
     @Override
     public void loop() {
         //Test
-        if (gamepad1.a) {
+        if (gamepad2.a) {
             Launcher.setPower(0.45);
-        } else if (gamepad1.b) {
+        } else if (gamepad2.b) {
             Launcher.setPower(-1);
         } else {
             Launcher.setPower(0);
         }
-        if (gamepad1.right_bumper) {
+        if (gamepad2.right_bumper) {
             LeftFeeder.setPosition(1);
             RightFeeder.setPosition(1);
         } else {
