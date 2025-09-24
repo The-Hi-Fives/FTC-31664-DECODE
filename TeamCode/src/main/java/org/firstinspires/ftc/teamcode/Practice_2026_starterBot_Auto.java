@@ -31,7 +31,7 @@ public class Practice_2026_starterBot_Auto extends LinearOpMode {
 
         waitForStart();
 
-        Launcher.setPower(0.5);
+        Launcher.setPower(0.45);
 
         sleep(2000);
 

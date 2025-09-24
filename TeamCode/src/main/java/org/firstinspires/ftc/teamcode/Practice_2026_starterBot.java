@@ -37,6 +37,8 @@ public class Practice_2026_starterBot extends OpMode {
         //Test
         if (gamepad1.a) {
             Launcher.setPower(0.45);
+        } else if (gamepad1.b) {
+            Launcher.setPower(-1);
         } else {
             Launcher.setPower(0);
         }
