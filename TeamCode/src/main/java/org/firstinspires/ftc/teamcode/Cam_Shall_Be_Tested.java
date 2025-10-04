@@ -23,10 +23,8 @@ public class Cam_Shall_Be_Tested extends LinearOpMode {
         VisionPortal.Builder builder = new VisionPortal.Builder()
                 .setCameraResolution(new Size(640, 480));
 
-
         builder.setCamera(hardwareMap.get(WebcamName.class, "Logi 720p Webcam"));
-
-
+        
         builder.addProcessor(ATP);
 
         LogiWebcam = builder.build();
