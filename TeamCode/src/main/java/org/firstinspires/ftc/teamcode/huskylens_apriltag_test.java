@@ -14,10 +14,7 @@ public class huskylens_apriltag_test extends OpMode {
     @Override
     public void init() {
         Camera = hardwareMap.get(HuskyLens.class,"HuskyLens");
-
         Camera.selectAlgorithm(HuskyLens.Algorithm.TAG_RECOGNITION);
-
-
     }
 
     @Override
