@@ -15,10 +15,10 @@ public class Macanum_Test extends OpMode {
 
     @Override
     public void init() {
-        FrontLeftMotor = hardwareMap.get(DcMotor.class,"frontleft");
-        BackLeftMotor = hardwareMap.get(DcMotor.class,"backleft");
-        FrontRightMotor = hardwareMap.get(DcMotor.class,"frontright");
-        BackRightMotor = hardwareMap.get(DcMotor.class,"backright");
+        FrontLeftMotor = hardwareMap.get(DcMotor.class,"frontLeft");
+        BackLeftMotor = hardwareMap.get(DcMotor.class,"backLeft");
+        FrontRightMotor = hardwareMap.get(DcMotor.class,"frontRight");
+        BackRightMotor = hardwareMap.get(DcMotor.class,"backRight");
 
         FrontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         BackRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -26,7 +26,7 @@ public class Macanum_Test extends OpMode {
 
     @Override
     public void loop() {
-        double x = -gamepad1.left_stick_y;
+        double x = gamepad1.left_stick_y;
         double y = -gamepad1.left_stick_x;
         double r = gamepad1.right_stick_x;
 
