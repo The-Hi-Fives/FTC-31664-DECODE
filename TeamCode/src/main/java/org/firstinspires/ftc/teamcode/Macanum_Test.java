@@ -30,7 +30,13 @@ public class Macanum_Test extends OpMode {
         double y = -gamepad1.left_stick_x;
         double r = gamepad1.right_stick_x;
 
-        double d = Math.max(Math.abs(x)+Math.abs(y)+Math.abs(r),1);
+        double m = 1;
+
+        if (gamepad1.left_bumper) {
+            m = 2;
+        }
+
+        double d = Math.max(Math.abs(x)+Math.abs(y)+Math.abs(r),1)/m;
 
         FrontLeftMotor.setPower((x+y+r)/d);
         BackLeftMotor.setPower((x-y+r)/d);
