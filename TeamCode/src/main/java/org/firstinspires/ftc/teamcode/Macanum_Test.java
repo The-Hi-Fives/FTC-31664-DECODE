@@ -33,7 +33,7 @@ public class Macanum_Test extends OpMode {
         double m = 1;
 
         if (gamepad1.left_bumper) {
-            m = 2;
+            m = 0.5;
         }
 
         double d = Math.max(Math.abs(x)+Math.abs(y)+Math.abs(r),1)/m;
