@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -12,9 +13,13 @@ public class Macanum_Test extends OpMode {
     DcMotor BackLeftMotor;
     DcMotor FrontRightMotor;
     DcMotor BackRightMotor;
+    HuskyLens Camera;
 
     @Override
     public void init() {
+        Camera = hardwareMap.get(HuskyLens.class,"Huskylens");
+        Camera.selectAlgorithm(HuskyLens.Algorithm.TAG_RECOGNITION);
+
         FrontLeftMotor = hardwareMap.get(DcMotor.class,"frontLeft");
         BackLeftMotor = hardwareMap.get(DcMotor.class,"backLeft");
         FrontRightMotor = hardwareMap.get(DcMotor.class,"frontRight");
@@ -23,6 +28,16 @@ public class Macanum_Test extends OpMode {
         FrontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         BackRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
     }
+
+    public int getTag() {
+        for (int i = 0; i > 2; i++) {
+
+        }
+
+
+        return 0;
+    }
+
 
     @Override
     public void loop() {
