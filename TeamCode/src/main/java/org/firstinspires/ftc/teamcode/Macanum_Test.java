@@ -17,6 +17,12 @@ public class Macanum_Test extends OpMode {
     DcMotorEx BackRightMotor;
     HuskyLens Camera;
 
+    public enum State {
+        DEFAULT,
+        AIMING
+    }
+    State currentState = State.DEFAULT;
+
     @Override
     public void init() {
         Camera = hardwareMap.get(HuskyLens.class,"Huskylens");
@@ -37,16 +43,18 @@ public class Macanum_Test extends OpMode {
     }
 
     public HuskyLens.Block getTag() {
-        List<HuskyLens.Block> blocks = Arrays.asList(Camera.blocks());
+        List<HuskyLens.Block> blocks = null;//Arrays.asList(Camera.blocks());
         HuskyLens.Block targetBlock = null;
-        for (HuskyLens.Block block : blocks) {
-            if (block.id != 0) {
-                if (targetBlock != null) {
-                    if (block.x * block.y > targetBlock.x * targetBlock.y) {
+        if (false) {
+            for (HuskyLens.Block block : blocks) {
+                if (block.id != 0) {
+                    if (targetBlock != null) {
+                        if (block.x * block.y > targetBlock.x * targetBlock.y) {
+                            targetBlock = block;
+                        }
+                    } else {
                         targetBlock = block;
                     }
-                } else {
-                    targetBlock = block;
                 }
             }
         }
@@ -56,21 +64,17 @@ public class Macanum_Test extends OpMode {
     public void Telemetry(HuskyLens.Block block) {
         telemetry.addLine("============");
         telemetry.addLine("Controls:");
-        telemetry.addLine("Left Stick: Crab Movement");
+        telemetry.addLine("Left Stick: Macanum Drive");
         telemetry.addLine("Right Stick: Rotation");
         telemetry.addLine("============");
         if (block != null) {
             telemetry.addData("id:", block);
         }
+        telemetry.addData("State:", currentState);
     }
 
-
-    @Override
-    public void loop() {
-        double x = gamepad1.left_stick_y;
-        double y = -gamepad1.left_stick_x;
-        double r = gamepad1.right_stick_x;
-
+    public void MacanumDrive(double x, double y, double r, double ad) {
+        r += ad;
         double m = 1;
 
         if (gamepad1.left_bumper) {
@@ -79,13 +83,38 @@ public class Macanum_Test extends OpMode {
 
         double d = Math.max(Math.abs(x)+Math.abs(y)+Math.abs(r),1)/m;
 
-        FrontLeftMotor.setVelocity((x+y+r)/d*2000);
-        BackLeftMotor.setVelocity((x-y+r)/d*2000);
-        FrontRightMotor.setVelocity((x-y-r)/d*2000);
-        BackRightMotor.setVelocity((x+y-r)/d*2000);
+        double FTVelocity = (x + y + r)/d * 2000;
+        double BTVelocity = (x - y + r)/d * 2000;
+        double FRVelocity = (x - y - r)/d * 2000;
+        double BRVelocity = (x + y - r)/d * 2000;
 
+        FrontLeftMotor.setVelocity(FTVelocity);
+        BackLeftMotor.setVelocity(BTVelocity);
+        FrontRightMotor.setVelocity(FRVelocity);
+        BackRightMotor.setVelocity(BRVelocity);
+    }
+
+    @Override
+    public void loop() {
+        double x = gamepad1.left_stick_y;
+        double y = -gamepad1.left_stick_x;
+        double r = gamepad1.right_stick_x;
         HuskyLens.Block block = getTag();
 
+        double ad = 0;
+
+        //if (block != null && block.id == 1 && gamepad1.y && currentState != State.AIMING) {
+        //    currentState = State.AIMING;
+        //} else {
+        //    if (gamepad1.y || block != null || block.id != 1) {
+        //        currentState = State.DEFAULT;
+        //    } else {
+        //        ad = Math.min((double) block.x,-0.5);
+        //        ad = Math.max(ad,0.5);
+        //    }
+        //}
+
+        MacanumDrive(x,y,r,ad);
         Telemetry(block);
     }
 }
