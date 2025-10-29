@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.media.audiofx.AcousticEchoCanceler;
-
 import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -14,13 +12,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import java.util.Arrays;
 import java.util.List;
 
-@TeleOp
+@TeleOp(name="Macanum Main TeleOp", group="TeleOp")
 public class Macanum_Test extends OpMode {
-    DcMotorEx FrontLeftMotor;
-    DcMotorEx BackLeftMotor;
-    DcMotorEx FrontRightMotor;
-    DcMotorEx BackRightMotor;
-    //DcMotorEx LeftLaunchMotor;
+    DcMotorEx FrontRightMotor, BackRightMotor, FrontLeftMotor, BackLeftMotor;
     HuskyLens Camera;
     SparkFunOTOS Odometry;
     public enum State {
@@ -28,6 +22,7 @@ public class Macanum_Test extends OpMode {
         AIMING
     }
     State currentState = State.DEFAULT;
+    double Rotation_Offset = 0;
 
     @Override
     public void init() {
@@ -58,7 +53,7 @@ public class Macanum_Test extends OpMode {
         for (HuskyLens.Block block : blocks) {
             if (block.id != 0) {
                 if (targetBlock != null) {
-                    if (block.x * block.y > targetBlock.x * targetBlock.y) { // Checks which AprilTag is the largest on the screen.
+                    if (block.width * block.height > targetBlock.width * targetBlock.height) { // Checks which AprilTag is the largest on the screen.
                         targetBlock = block; // Sets block as currentBlock
                     }
                 } else { // If not currentBlock then set block as currentBlock.
@@ -82,21 +77,16 @@ public class Macanum_Test extends OpMode {
         }
         telemetry.addData("State:", currentState);
         telemetry.addData("Position",Odometry.getPosition());
-        telemetry.addData("Rot",DegreesToPose2D(Odometry.getPosition().h));
     }
-
-    public SparkFunOTOS.Pose2D DegreesToPose2D(double degrees){
-        Double Radians = degrees * (Math.PI / 180);
-        SparkFunOTOS.Pose2D vecter = new SparkFunOTOS.Pose2D(Math.cos(Radians),Math.sin(Radians),0);
-
-        return vecter;
-    }
-
     public void MacanumDrive(double x, double y, double r, double ad) {
-        SparkFunOTOS.Pose2D vector = DegreesToPose2D(Odometry.getPosition().h);
-        x += vector.x;
-        y += vector.y;
+        double Rot = (Rotation_Offset + 360) % 360;
+
+        double Radians = Math.toRadians(Rot);
+
+        double newX = x * Math.cos(Radians) - y * Math.sin(Radians);
+        double newY = y * Math.cos(Radians) + x * Math.sin(Radians);
         r += ad;
+
         double m = 1;
 
         if (gamepad1.left_bumper) {
@@ -105,15 +95,19 @@ public class Macanum_Test extends OpMode {
 
         double d = Math.max(Math.abs(x)+Math.abs(y)+Math.abs(r),1)/m;
 
-        double FTVelocity = (x + y + r)/d * 2000;
-        double BTVelocity = (x - y + r)/d * 2000;
-        double FRVelocity = (x - y - r)/d * 2000;
-        double BRVelocity = (x + y - r)/d * 2000;
+        double FTVelocity = (newX + newY + r)/d * 2000;
+        double BTVelocity = (newX - newY + r)/d * 2000;
+        double FRVelocity = (newX - newY - r)/d * 2000;
+        double BRVelocity = (newX + newY - r)/d * 2000;
 
         FrontLeftMotor.setVelocity(FTVelocity);
         BackLeftMotor.setVelocity(BTVelocity);
         FrontRightMotor.setVelocity(FRVelocity);
         BackRightMotor.setVelocity(BRVelocity);
+    }
+
+    public static double clamp(double value, double min, double max) {
+        return Math.max(min, Math.min(max, value));
     }
 
     @Override
@@ -124,21 +118,25 @@ public class Macanum_Test extends OpMode {
 
         SparkFunOTOS.Pose2D currentVector = Odometry.getPosition();
 
-        Odometry.setPosition(new SparkFunOTOS.Pose2D(currentVector.x,currentVector.y,currentVector.h-1.74567));
+        Odometry.setPosition(new SparkFunOTOS.Pose2D(currentVector.x,currentVector.y,currentVector.h-Math.sqrt(Math.PI))); // Corrects the Heading (Rotation) of the Odometry
 
-        HuskyLens.Block block = getTag(); // returns Apriltag Block
+        HuskyLens.Block block = getTag(); // returns AprilTag Block
 
         double ad = 0; // what is added to the rotation for aim
 
+        // The Logic for Aiming
         if (block != null && block.id == 1 && gamepad1.y && currentState != State.AIMING) {
-            currentState = State.AIMING;
+            currentState = State.AIMING; // Changes state to AIMING
         } else {
             if (gamepad1.y || block == null || block.id != 1.0) {
-                currentState = State.DEFAULT;
+                currentState = State.DEFAULT; // Changes state to DEFAULT
             } else {
-                ad = Math.min((double) block.x,-0.5);
-                ad = Math.max(ad,0.5);
+                ad = clamp((double) block.x,-0.5,0.5); // Makes sure the ad is between -0.5 and 0.5
             }
+        }
+        // Sets the Rotation Offset to the current when X is pressed on gamepad1
+        if (gamepad1.x) {
+            Rotation_Offset = Odometry.getPosition().h;
         }
 
         MacanumDrive(x,y,r,ad);
