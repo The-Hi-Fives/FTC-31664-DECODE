@@ -10,14 +10,12 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
 
-@TeleOp
+@TeleOp(name = "Main TeleOp", group = "TeleOp")
 public class Practice_2026_starterBot extends OpMode {
 
-    DcMotor LeftMotor;
-    DcMotor RightMotor;
+    DcMotor LeftMotor, RightMotor;
     DcMotorEx Launcher;
-    Servo LeftFeeder;
-    Servo RightFeeder;
+    Servo LeftFeeder, RightFeeder;
 
     @Override
     public void init() {
@@ -26,20 +24,24 @@ public class Practice_2026_starterBot extends OpMode {
         Launcher = hardwareMap.get(DcMotorEx.class,"launchMotor");
         LeftFeeder = hardwareMap.get(Servo.class,"left_feeder");
         RightFeeder = hardwareMap.get(Servo.class,"right_feeder");
+
         Launcher.setZeroPowerBehavior(BRAKE);
+        Launcher.setDirection(DcMotorEx.Direction.REVERSE);
+        Launcher.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         LeftFeeder.setDirection(Servo.Direction.REVERSE);
-        RightMotor.setDirection(DcMotor.Direction.REVERSE);
+        LeftMotor.setDirection(DcMotor.Direction.REVERSE);
     }
 
     @Override
     public void loop() {
         //Test
         if (gamepad2.a) {
-            Launcher.setPower(0.45);
+            Launcher.setVelocity(900);
         } else if (gamepad2.b) {
-            Launcher.setPower(-1);
+            Launcher.setVelocity(-2000);
         } else {
-            Launcher.setPower(0);
+            Launcher.setVelocity(0);
         }
         if (gamepad2.right_bumper) {
             LeftFeeder.setPosition(1);

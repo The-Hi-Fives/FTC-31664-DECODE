@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Autonomous
+@Autonomous(name = "Launch Auto", group = "Autos")
 public class Practice_2026_starterBot_Auto_Launch extends LinearOpMode {
 
     @Override
