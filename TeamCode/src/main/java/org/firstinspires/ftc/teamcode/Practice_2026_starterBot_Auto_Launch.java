@@ -4,6 +4,7 @@ import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -13,46 +14,46 @@ public class Practice_2026_starterBot_Auto_Launch extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        DcMotor LeftMotor;
-        DcMotor RightMotor;
+        DcMotor LeftMotor, RightMotor;
         DcMotorEx Launcher;
-        Servo LeftFeeder;
-        Servo RightFeeder;
+        CRServo LeftFeeder, RightFeeder;
 
         LeftMotor = hardwareMap.get(DcMotor.class, "leftMotor");
         RightMotor = hardwareMap.get(DcMotor.class, "rightMotor");
         Launcher = hardwareMap.get(DcMotorEx.class, "launchMotor");
-        LeftFeeder = hardwareMap.get(Servo.class, "left_feeder");
-        RightFeeder = hardwareMap.get(Servo.class, "right_feeder");
+        LeftFeeder = hardwareMap.get(CRServo.class, "left_feeder");
+        RightFeeder = hardwareMap.get(CRServo.class, "right_feeder");
 
         Launcher.setZeroPowerBehavior(BRAKE);
-        LeftFeeder.setDirection(Servo.Direction.REVERSE);
+        Launcher.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        RightFeeder.setDirection(CRServo.Direction.REVERSE);
         RightMotor.setDirection(DcMotor.Direction.REVERSE);
 
         waitForStart();
 
-        Launcher.setPower(0.45);
+        Launcher.setVelocity(1000);
 
-        sleep(2000);
+        sleep(1000);
 
         for (int i = 1; i <= 3; i++) {
 
-            LeftFeeder.setPosition(0.4);
-            RightFeeder.setPosition(0.4);
-
-            sleep(800);
-
-
-            LeftFeeder.setPosition(0);
-            RightFeeder.setPosition(0);
+            LeftFeeder.setPower(-1);
+            RightFeeder.setPower(-1);
 
             sleep(500);
+
+
+            LeftFeeder.setPower(0.5);
+            RightFeeder.setPower(0.5);
+
+            sleep(1000);
         }
 
-        Launcher.setPower(0);
+        Launcher.setVelocity(0);
 
-        RightMotor.setPower(-1);
-        LeftMotor.setPower(-1);
+        RightMotor.setPower(1);
+        LeftMotor.setPower(1);
 
         sleep(1000);
 

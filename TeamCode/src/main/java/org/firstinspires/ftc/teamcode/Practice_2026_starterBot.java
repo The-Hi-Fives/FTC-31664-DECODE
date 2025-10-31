@@ -4,6 +4,7 @@ import java.lang.Math;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -15,21 +16,20 @@ public class Practice_2026_starterBot extends OpMode {
 
     DcMotor LeftMotor, RightMotor;
     DcMotorEx Launcher;
-    Servo LeftFeeder, RightFeeder;
+    CRServo LeftFeeder, RightFeeder;
 
     @Override
     public void init() {
         LeftMotor = hardwareMap.get(DcMotor.class,"leftMotor");
         RightMotor = hardwareMap.get(DcMotor.class,"rightMotor");
         Launcher = hardwareMap.get(DcMotorEx.class,"launchMotor");
-        LeftFeeder = hardwareMap.get(Servo.class,"left_feeder");
-        RightFeeder = hardwareMap.get(Servo.class,"right_feeder");
+        LeftFeeder = hardwareMap.get(CRServo.class,"left_feeder");
+        RightFeeder = hardwareMap.get(CRServo.class,"right_feeder");
 
         Launcher.setZeroPowerBehavior(BRAKE);
-        Launcher.setDirection(DcMotorEx.Direction.REVERSE);
         Launcher.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        LeftFeeder.setDirection(Servo.Direction.REVERSE);
+        RightFeeder.setDirection(CRServo.Direction.REVERSE);
         LeftMotor.setDirection(DcMotor.Direction.REVERSE);
     }
 
@@ -37,18 +37,18 @@ public class Practice_2026_starterBot extends OpMode {
     public void loop() {
         //Test
         if (gamepad2.a) {
-            Launcher.setVelocity(900);
+            Launcher.setVelocity(1000);
         } else if (gamepad2.b) {
-            Launcher.setVelocity(-2000);
+            Launcher.setVelocity(-360);
         } else {
             Launcher.setVelocity(0);
         }
         if (gamepad2.right_bumper) {
-            LeftFeeder.setPosition(1);
-            RightFeeder.setPosition(1);
+            LeftFeeder.setPower(1);
+            RightFeeder.setPower(1);
         } else {
-            LeftFeeder.setPosition(0);
-            RightFeeder.setPosition(0);
+            LeftFeeder.setPower(0);
+            RightFeeder.setPower(0);
         }
 
         double Speed = 1; // 0-1
@@ -59,7 +59,7 @@ public class Practice_2026_starterBot extends OpMode {
 
         // Get game pad input
         double drive = -gamepad1.left_stick_y; // Throttle (forward/backward)
-        double turn = -gamepad1.right_stick_x; // Steering (left/right)
+        double turn = gamepad1.right_stick_x; // Steering (left/right)
 
         // Calculate motor powers for arcade drive
         double leftPower = drive + turn;
