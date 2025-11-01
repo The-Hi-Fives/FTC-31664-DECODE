@@ -38,14 +38,16 @@ public class Practice_2026_starterBot extends OpMode {
         //Test
         if (gamepad2.a) {
             Launcher.setVelocity(1000);
-        } else if (gamepad2.b) {
-            Launcher.setVelocity(-360);
         } else {
             Launcher.setVelocity(0);
         }
         if (gamepad2.right_bumper) {
             LeftFeeder.setPower(1);
             RightFeeder.setPower(1);
+        } else if (gamepad2.left_bumper) {
+            LeftFeeder.setPower(-1);
+            RightFeeder.setPower(-1);
+            Launcher.setVelocity(-360);
         } else {
             LeftFeeder.setPower(0);
             RightFeeder.setPower(0);
@@ -53,8 +55,8 @@ public class Practice_2026_starterBot extends OpMode {
 
         double Speed = 1; // 0-1
 
-        if (gamepad1.left_bumper) {
-            Speed -= 0.5;
+        if (gamepad1.left_trigger > 0) {
+            Speed -= gamepad1.left_trigger/2;
         }
 
         // Get game pad input

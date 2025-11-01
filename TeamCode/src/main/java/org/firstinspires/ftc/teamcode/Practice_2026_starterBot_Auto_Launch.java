@@ -50,6 +50,9 @@ public class Practice_2026_starterBot_Auto_Launch extends LinearOpMode {
             sleep(1000);
         }
 
+        LeftFeeder.setPower(0);
+        RightFeeder.setPower(0);
+
         Launcher.setVelocity(0);
 
         RightMotor.setPower(1);
