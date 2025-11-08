@@ -53,6 +53,8 @@ public class Macanum_Test extends OpMode {
         Odometry.setSignalProcessConfig(new SparkFunOTOS.SignalProcessConfig((byte)0x0B));
         Odometry.initialize();
         Odometry.resetTracking();
+        Odometry.setAngularScalar(1);
+        // 175.0?
     }
 
     public HuskyLens.Block getTag() {
@@ -91,12 +93,12 @@ public class Macanum_Test extends OpMode {
         telemetry.addData("Position",Odometry.getPosition());
     }
     public void MacanumDrive(double x, double y, double r, double ad) {
-        double Rot = (Rotation_Offset + Odometry.getPosition().h + 360) % 360;
+        double Rot = (Odometry.getPosition().h + 360) % 360;
 
         double Radians = Math.toRadians(Rot);
 
         double newX = y * Math.sin(Radians) - x * Math.cos(Radians); // idk if it works
-        double newY = x * Math.sin(Radians) + y * Math.cos(Radians); // ditto
+        double newY = x * Math.sin(Radians) + y * Math.cos(Radians); // ditto ^
         r += ad;
 
         double m = 1;
@@ -128,7 +130,7 @@ public class Macanum_Test extends OpMode {
 
         SparkFunOTOS.Pose2D currentVector = Odometry.getPosition();
 
-        Odometry.setPosition(new SparkFunOTOS.Pose2D(currentVector.x,currentVector.y,currentVector.h+15)); // Corrects the Heading (Rotation) of the Odometry
+        Odometry.setPosition(new SparkFunOTOS.Pose2D(currentVector.x,currentVector.y,currentVector.h)); // Corrects the Heading (Rotation) of the Odometry
 
         //HuskyLens.Block block = getTag(); // returns AprilTag Block
 
