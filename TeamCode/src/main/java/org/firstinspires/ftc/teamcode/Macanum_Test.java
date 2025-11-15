@@ -4,9 +4,11 @@ import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
@@ -15,7 +17,7 @@ import java.util.List;
 
 @TeleOp(name="Macanum Main TeleOp", group="TeleOp")
 public class Macanum_Test extends OpMode {
-    DcMotorEx FrontRightMotor, BackRightMotor, FrontLeftMotor, BackLeftMotor, Intake;
+    DcMotorEx FrontRightMotor, BackRightMotor, FrontLeftMotor, BackLeftMotor, Intake, LeftLaunch, RightLaunch;
     CRServo leftPulley, rightPulley;
     HuskyLens Camera;
     SparkFunOTOS Odometry;
@@ -39,6 +41,8 @@ public class Macanum_Test extends OpMode {
         FrontRightMotor = hardwareMap.get(DcMotorEx.class,"frontRight");
         BackRightMotor = hardwareMap.get(DcMotorEx.class,"backRight");
         Intake = hardwareMap.get(DcMotorEx.class,"intake");
+        RightLaunch = hardwareMap.get(DcMotorEx.class, "InsertMoterNameHere");
+        LeftLaunch = hardwareMap.get(DcMotorEx.class, "InsertMoterNameHere");
         leftPulley = hardwareMap.get(CRServo.class,"leftpulley");
         rightPulley = hardwareMap.get(CRServo.class,"rightpulley");
 
@@ -46,9 +50,12 @@ public class Macanum_Test extends OpMode {
         BackRightMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         FrontLeftMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         BackLeftMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        LeftLaunch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        RightLaunch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         FrontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         BackRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        RightLaunch.setDirection(DcMotorSimple.Direction.REVERSE);
 
         Odometry.setSignalProcessConfig(new SparkFunOTOS.SignalProcessConfig((byte)0x0B));
         Odometry.initialize();
@@ -92,13 +99,41 @@ public class Macanum_Test extends OpMode {
         telemetry.addData("State:", currentState);
         telemetry.addData("Position",Odometry.getPosition());
     }
+    public void IntakeOuttake() {
+        // Pulleys
+        double addToPos = 0;
+        if (gamepad2.dpad_down) {
+            addToPos += -1;
+        }
+        if (gamepad2.dpad_up) {
+            addToPos += 1;
+        }
+        leftPulley.setPower(addToPos/5);
+        rightPulley.setPower(addToPos/5);
+
+        // Intake
+        if (gamepad2.a) {
+            Intake.setVelocity(1000);
+        } else {
+            Intake.setVelocity(-1000);
+        }
+
+        // Launching
+        if (gamepad2.b) {
+            RightLaunch.setVelocity(2000);
+            LeftLaunch.setVelocity(2000);
+        } else {
+            RightLaunch.setVelocity(0);
+            LeftLaunch.setVelocity(0);
+        }
+    }
     public void MacanumDrive(double x, double y, double r, double ad) {
-        double Rot = (Odometry.getPosition().h + 360) % 360;
+        double Rot = (Odometry.getPosition().h % 360 + 360) % 360;
 
         double Radians = Math.toRadians(Rot);
 
-        double newX = y * Math.sin(Radians) - x * Math.cos(Radians); // idk if it works
-        double newY = x * Math.sin(Radians) + y * Math.cos(Radians); // ditto ^
+        double newX = y * Math.sin(Radians) + x * Math.cos(Radians); // idk if it works
+        double newY = x * Math.sin(Radians) - y * Math.cos(Radians); // ditto ^
         r += ad;
 
         double m = 1;
@@ -152,6 +187,7 @@ public class Macanum_Test extends OpMode {
         }
 
         MacanumDrive(x,y,r,ad);
+        IntakeOuttake();
         Telemetry();
     }
 }
