@@ -41,8 +41,8 @@ public class Macanum_Test extends OpMode {
         FrontRightMotor = hardwareMap.get(DcMotorEx.class,"frontRight");
         BackRightMotor = hardwareMap.get(DcMotorEx.class,"backRight");
         Intake = hardwareMap.get(DcMotorEx.class,"intake");
-        RightLaunch = hardwareMap.get(DcMotorEx.class, "InsertMoterNameHere");
-        LeftLaunch = hardwareMap.get(DcMotorEx.class, "InsertMoterNameHere");
+        //RightLaunch = hardwareMap.get(DcMotorEx.class, "InsertMoterNameHere");
+        //LeftLaunch = hardwareMap.get(DcMotorEx.class, "InsertMoterNameHere");
         leftPulley = hardwareMap.get(CRServo.class,"leftpulley");
         rightPulley = hardwareMap.get(CRServo.class,"rightpulley");
 
