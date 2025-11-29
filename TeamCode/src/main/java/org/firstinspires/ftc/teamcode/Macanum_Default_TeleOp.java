@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
+import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -25,6 +26,7 @@ public class Macanum_Default_TeleOp extends OpMode {
         DEFAULT,
         AIMING
     }
+
     State currentState = State.DEFAULT;
     static double PulleyMax = 180, PulleyMin = 0;
     @Override
