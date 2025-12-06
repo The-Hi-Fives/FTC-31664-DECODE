@@ -29,15 +29,15 @@ public class Macanum_Default_TeleOp extends OpMode {
     }
 
     State currentState = State.DEFAULT;
-    double AlternatePos = 0, AlternateVelocity = 0;
+    double AlternateVelocity = 0;
     static double PulleyMax = 180, PulleyMin = 0;
     @Override
     public void init() {
         // 175.0?
 
-        //LED = hardwareMap.get(Servo.class,"LED");
+        LED = hardwareMap.get(Servo.class,"LED");
 
-        //LED.setPosition(0.277); // Sets the LED color to Red (Hopefully)
+        LED.setPosition(0.277); // Sets the LED color to Red (Hopefully)
 
         //Camera = hardwareMap.get(HuskyLens.class,"Huskylens");
         //Camera.selectAlgorithm(HuskyLens.Algorithm.TAG_RECOGNITION);
@@ -46,30 +46,29 @@ public class Macanum_Default_TeleOp extends OpMode {
         BackLeftMotor = hardwareMap.get(DcMotorEx.class,"backLeft");
         FrontRightMotor = hardwareMap.get(DcMotorEx.class,"frontRight");
         BackRightMotor = hardwareMap.get(DcMotorEx.class,"backRight");
-        //Intake = hardwareMap.get(DcMotorEx.class,"intake");
-        //RightLaunch = hardwareMap.get(DcMotorEx.class,"InsertMotorNameHere");
-        //LeftLaunch = hardwareMap.get(DcMotorEx.class,"InsertMotorNameHere");
-        //leftPulley = hardwareMap.get(Servo.class,"leftPulley");
-        //rightPulley = hardwareMap.get(Servo.class,"rightPulley");
 
-        //topConveyor = hardwareMap.get(CRServo.class,"InsertServoNameHere");
-        //backLeftConveyor = hardwareMap.get(CRServo.class,"InsertServoNameHere");
-        //backRightConveyor = hardwareMap.get(CRServo.class,"InsertServoNameHere");
-        //frontLeftConveyor = hardwareMap.get(CRServo.class,"InsertServoNameHere");
-        //frontRightConveyor = hardwareMap.get(CRServo.class,"InsertServoNameHere");
+        Intake = hardwareMap.get(DcMotorEx.class,"intake");
+        RightLaunch = hardwareMap.get(DcMotorEx.class,"rightLaunch");
+        LeftLaunch = hardwareMap.get(DcMotorEx.class,"leftLaunch");
+
+        topConveyor = hardwareMap.get(CRServo.class,"topC");
+        backLeftConveyor = hardwareMap.get(CRServo.class,"backLeftC");
+        backRightConveyor = hardwareMap.get(CRServo.class,"backRightC");
+        frontLeftConveyor = hardwareMap.get(CRServo.class,"frontLeftC");
+        frontRightConveyor = hardwareMap.get(CRServo.class,"frontRightC");
 
         FrontRightMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         BackRightMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         FrontLeftMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         BackLeftMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        //LeftLaunch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //RightLaunch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        LeftLaunch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        RightLaunch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         FrontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         BackRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        //RightLaunch.setDirection(DcMotorSimple.Direction.REVERSE);
-        //backRightConveyor.setDirection(DcMotorSimple.Direction.REVERSE);
-        //frontRightConveyor.setDirection(DcMotorSimple.Direction.REVERSE);
+        RightLaunch.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRightConveyor.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontRightConveyor.setDirection(DcMotorSimple.Direction.REVERSE);
     }
     public HuskyLens.Block getTag() {
         List<HuskyLens.Block> blocks = Arrays.asList(Camera.blocks());
@@ -96,7 +95,6 @@ public class Macanum_Default_TeleOp extends OpMode {
         telemetry.addLine("X (Square) Button: Recenter (Non-Existent)");
         telemetry.addLine("================");
         telemetry.addLine("Game Pad 2: (Attachments) ==");
-        telemetry.addLine("Up/Down D-Pad: Manual Up/Down Aiming");
         telemetry.addLine("A (Cross) Button: Spit out");
         telemetry.addLine("B (Circle) Button: Launch");
         telemetry.addLine("==== Telemetry ====");
@@ -107,51 +105,50 @@ public class Macanum_Default_TeleOp extends OpMode {
         //}
         telemetry.addData("State:", currentState);
         telemetry.addData("Launch Velocity:",LeftLaunch.getVelocity());
-        telemetry.addData("Pulley Position:",leftPulley);
+        telemetry.addData("Pulley Position:",leftPulley.getPosition());
     }
-    public void IntakeOuttake(double AlternatePos, double AlternateVelocity) {
-        // Pulleys
-        if (currentState == State.AIMING && AlternatePos != 0) {
-            PulleyPos = AlternatePos;
-        } else {
-            if (gamepad2.dpad_down) {
-                PulleyPos -= 1;
-            }
-            if (gamepad2.dpad_up) {
-                PulleyPos += 1;
-            }
-            PulleyPos = clamp(PulleyPos,PulleyMin,PulleyMax);
-        }
-        leftPulley.setPosition(PulleyPos);
-        rightPulley.setPosition(PulleyPos);
-
+    public void IntakeOuttake(double AlternateVelocity) {
+        // No Pulley?
         // Intake/Outtake
         if (gamepad2.a) {
             // Outtake
-            backLeftConveyor.setPower(1);
-            frontLeftConveyor.setPower(1);
-            backRightConveyor.setPower(1);
-            frontRightConveyor.setPower(1);
-            topConveyor.setPower(1);
-            Intake.setVelocity(1000);
-        } else {
-            // Intake
-            Intake.setVelocity(-1000);
-        }
-
-        // Launching
-        if (gamepad2.b) {
             backLeftConveyor.setPower(-1);
             frontLeftConveyor.setPower(-1);
             backRightConveyor.setPower(-1);
             frontRightConveyor.setPower(-1);
+            topConveyor.setPower(1);
+            Intake.setVelocity(-1872);
+        } else {
+            // Intake
+            Intake.setVelocity(1872);
+        }
+
+        double velo = 0;
+
+        // Launching
+        if (gamepad2.b) {
+            backLeftConveyor.setPower(1);
+            frontLeftConveyor.setPower(1);
+            backRightConveyor.setPower(1);
+            frontRightConveyor.setPower(1);
             topConveyor.setPower(-1);
             if (currentState == State.AIMING && AlternateVelocity != 0) {
                 RightLaunch.setVelocity(AlternateVelocity);
                 LeftLaunch.setVelocity(AlternateVelocity);
             } else {
-                RightLaunch.setVelocity(2000);
-                LeftLaunch.setVelocity(2000);
+                velo = 3500;
+            }
+        } else if (gamepad2.y) {
+            backLeftConveyor.setPower(1);
+            frontLeftConveyor.setPower(1);
+            backRightConveyor.setPower(1);
+            frontRightConveyor.setPower(1);
+            topConveyor.setPower(-1);
+            if (currentState == State.AIMING && AlternateVelocity != 0) {
+                RightLaunch.setVelocity(AlternateVelocity);
+                LeftLaunch.setVelocity(AlternateVelocity);
+            } else {
+                velo = 3000;
             }
         } else {
             backLeftConveyor.setPower(0);
@@ -162,6 +159,8 @@ public class Macanum_Default_TeleOp extends OpMode {
             RightLaunch.setVelocity(0);
             LeftLaunch.setVelocity(0);
         }
+        RightLaunch.setVelocity(velo);
+        LeftLaunch.setVelocity(velo);
     }
     public void MacanumDrive(double x, double y, double r, double ad) {
         r += ad;
@@ -200,12 +199,11 @@ public class Macanum_Default_TeleOp extends OpMode {
 
         // The Logic for Aiming
         double ad = 0; // what is added to the rotation for aim
-        AlternatePos = 0;
         AlternateVelocity = 0;
         //if (block != null && block.id == 1 && gamepad1.y && currentState != State.AIMING) {
         //    currentState = State.AIMING; // Changes state to AIMING
         //} else {
-        //    if (gamepad1.y || block == null || block.id != 1.0) {
+        //    if (gamepad1.y || block == null || block.id != 1.0 && block.id != 2.0) {
         //        currentState = State.DEFAULT; // Changes state to DEFAULT
         //    } else {
         //        ad = clamp((double) block.x,-0.5,0.5); // Makes sure the ad is between -0.5 and 0.5
@@ -216,7 +214,7 @@ public class Macanum_Default_TeleOp extends OpMode {
         // Sets the Rotation Offset to the current when X is pressed on gamepad1
 
         MacanumDrive(x,y,r,ad);
-        //IntakeOuttake(AlternatePos,AlternateVelocity);
+        IntakeOuttake(AlternateVelocity);
         Telemetry();
     }
 }

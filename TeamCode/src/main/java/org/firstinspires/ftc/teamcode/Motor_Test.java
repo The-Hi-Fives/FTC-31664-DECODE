@@ -2,24 +2,17 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 @Autonomous
 public class Motor_Test extends LinearOpMode {
-
-    DcMotor FrontLeftMotor;
-    DcMotor BackLeftMotor;
-    DcMotor FrontRightMotor;
-    DcMotor BackRightMotor;
-
+    CRServo topConveyor;
     @Override
     public void runOpMode() throws InterruptedException {
-        FrontLeftMotor = hardwareMap.get(DcMotor.class,"frontleft");
-        BackLeftMotor = hardwareMap.get(DcMotor.class,"backleft");
-        FrontRightMotor = hardwareMap.get(DcMotor.class,"frontright");
-        BackRightMotor = hardwareMap.get(DcMotor.class,"backright");
-
-        FrontLeftMotor.setPower(1);
+        topConveyor = hardwareMap.get(CRServo.class,"topC");
+        topConveyor.setPower(1);
 
     }
 
