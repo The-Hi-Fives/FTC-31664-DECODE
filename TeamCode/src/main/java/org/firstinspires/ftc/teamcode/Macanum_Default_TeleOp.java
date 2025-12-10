@@ -19,7 +19,6 @@ import java.util.List;
 public class Macanum_Default_TeleOp extends OpMode {
     DcMotorEx FrontRightMotor, BackRightMotor, FrontLeftMotor, BackLeftMotor, Intake, LeftLaunch, RightLaunch;
     CRServo backLeftConveyor, backRightConveyor, frontLeftConveyor, frontRightConveyor, topConveyor;
-    Servo leftPulley, rightPulley;
     HuskyLens Camera;
     Servo LED;
     double PulleyPos = 0;
@@ -51,7 +50,7 @@ public class Macanum_Default_TeleOp extends OpMode {
         RightLaunch = hardwareMap.get(DcMotorEx.class,"rightLaunch");
         LeftLaunch = hardwareMap.get(DcMotorEx.class,"leftLaunch");
 
-        topConveyor = hardwareMap.get(CRServo.class,"topC");
+        topConveyor = hardwareMap.get(CRServo.class,"topC");                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
         backLeftConveyor = hardwareMap.get(CRServo.class,"backLeftC");
         backRightConveyor = hardwareMap.get(CRServo.class,"backRightC");
         frontLeftConveyor = hardwareMap.get(CRServo.class,"frontLeftC");
@@ -105,10 +104,9 @@ public class Macanum_Default_TeleOp extends OpMode {
         //}
         telemetry.addData("State:", currentState);
         telemetry.addData("Launch Velocity:",LeftLaunch.getVelocity());
-        telemetry.addData("Pulley Position:",leftPulley.getPosition());
     }
     public void IntakeOuttake(double AlternateVelocity) {
-        // No Pulley?
+        // No Pulley? :\
         // Intake/Outtake
         if (gamepad2.a) {
             // Outtake
