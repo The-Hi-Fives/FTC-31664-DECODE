@@ -114,48 +114,36 @@ public class Macanum_Default_TeleOp extends OpMode {
             frontLeftConveyor.setPower(-1);
             backRightConveyor.setPower(-1);
             frontRightConveyor.setPower(-1);
-            topConveyor.setPower(1);
             Intake.setVelocity(-1872);
         } else {
             // Intake
             Intake.setVelocity(1872);
         }
-
         double velo = 0;
-
         // Launching
-        if (gamepad2.b) {
+        if (gamepad2.b || gamepad2.y) {
             backLeftConveyor.setPower(1);
             frontLeftConveyor.setPower(1);
             backRightConveyor.setPower(1);
             frontRightConveyor.setPower(1);
-            topConveyor.setPower(-1);
-            if (currentState == State.AIMING && AlternateVelocity != 0) {
-                RightLaunch.setVelocity(AlternateVelocity);
-                LeftLaunch.setVelocity(AlternateVelocity);
+            if (gamepad2.b) {
+                velo = 2500;
             } else {
-                velo = 3500;
-            }
-        } else if (gamepad2.y) {
-            backLeftConveyor.setPower(1);
-            frontLeftConveyor.setPower(1);
-            backRightConveyor.setPower(1);
-            frontRightConveyor.setPower(1);
-            topConveyor.setPower(-1);
-            if (currentState == State.AIMING && AlternateVelocity != 0) {
-                RightLaunch.setVelocity(AlternateVelocity);
-                LeftLaunch.setVelocity(AlternateVelocity);
-            } else {
-                velo = 3000;
+                velo = 2000;
             }
         } else {
             backLeftConveyor.setPower(0);
             frontLeftConveyor.setPower(0);
             backRightConveyor.setPower(0);
             frontRightConveyor.setPower(0);
+            velo = 0;
+        }
+        if (velo != 0 && RightLaunch.getVelocity() > (velo/4)*3) {
+            topConveyor.setPower(1);
+        } else if (velo == 0) {
             topConveyor.setPower(0);
-            RightLaunch.setVelocity(0);
-            LeftLaunch.setVelocity(0);
+        } else {
+            topConveyor.setPower(-1);
         }
         RightLaunch.setVelocity(velo);
         LeftLaunch.setVelocity(velo);
