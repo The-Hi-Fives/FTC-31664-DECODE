@@ -68,6 +68,7 @@ public class Macanum_Default_TeleOp extends OpMode {
         RightLaunch.setDirection(DcMotorSimple.Direction.REVERSE);
         backRightConveyor.setDirection(DcMotorSimple.Direction.REVERSE);
         frontRightConveyor.setDirection(DcMotorSimple.Direction.REVERSE);
+        topConveyor.setDirection(DcMotorSimple.Direction.REVERSE);
     }
     public HuskyLens.Block getTag() {
         List<HuskyLens.Block> blocks = Arrays.asList(Camera.blocks());
@@ -114,10 +115,13 @@ public class Macanum_Default_TeleOp extends OpMode {
             frontLeftConveyor.setPower(-1);
             backRightConveyor.setPower(-1);
             frontRightConveyor.setPower(-1);
+        }
+        if (gamepad2.left_bumper || gamepad1.left_bumper) {
             Intake.setVelocity(-1872);
-        } else {
-            // Intake
+        } else if (gamepad2.right_bumper || gamepad1.right_bumper) {
             Intake.setVelocity(1872);
+        } else {
+            Intake.setVelocity(0);
         }
         double velo = 0;
         // Launching
@@ -129,7 +133,7 @@ public class Macanum_Default_TeleOp extends OpMode {
             if (gamepad2.b) {
                 velo = 2500;
             } else {
-                velo = 2000;
+                velo = 2300;
             }
         } else {
             backLeftConveyor.setPower(0);
@@ -138,12 +142,10 @@ public class Macanum_Default_TeleOp extends OpMode {
             frontRightConveyor.setPower(0);
             velo = 0;
         }
-        if (velo != 0 && RightLaunch.getVelocity() > (velo/4)*3) {
+        if (velo != 0 && RightLaunch.getVelocity() > velo-100) {
             topConveyor.setPower(1);
-        } else if (velo == 0) {
-            topConveyor.setPower(0);
         } else {
-            topConveyor.setPower(-1);
+            topConveyor.setPower(0);
         }
         RightLaunch.setVelocity(velo);
         LeftLaunch.setVelocity(velo);
