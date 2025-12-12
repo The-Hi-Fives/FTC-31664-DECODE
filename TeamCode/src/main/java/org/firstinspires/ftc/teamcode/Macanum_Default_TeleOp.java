@@ -91,20 +91,16 @@ public class Macanum_Default_TeleOp extends OpMode {
         telemetry.addLine("Game Pad 1: (Driver) ==");
         telemetry.addLine("Left Stick: Macanum Drive");
         telemetry.addLine("Right Stick: Rotation");
-        telemetry.addLine("Y (Triangle) Button: Toggle Aiming");
-        telemetry.addLine("X (Square) Button: Recenter (Non-Existent)");
         telemetry.addLine("================");
         telemetry.addLine("Game Pad 2: (Attachments) ==");
         telemetry.addLine("A (Cross) Button: Spit out");
-        telemetry.addLine("B (Circle) Button: Launch");
+        telemetry.addLine("B (Circle) Button: Launch (Far)");
+        telemetry.addLine("Y (Triangle) Button: Launch (Near)");
+        telemetry.addLine("== Both Game Pads ==");
+        telemetry.addLine("Left Bumper: Intake");
+        telemetry.addLine("Right Bumper: Outtake");
         telemetry.addLine("==== Telemetry ====");
-        //if (block != null) {
-        //    telemetry.addLine("AprilTag 0"+block.id+":");
-        //    telemetry.addLine("Size:"+block.height+","+block.width);
-        //    telemetry.addLine("Position:"+block.x+","+block.y);
-        //}
-        telemetry.addData("State:", currentState);
-        telemetry.addData("Launch Velocity:",LeftLaunch.getVelocity());
+
     }
     public void IntakeOuttake(double AlternateVelocity) {
         // No Pulley? :\
@@ -161,13 +157,13 @@ public class Macanum_Default_TeleOp extends OpMode {
 
         double d = Math.max(Math.abs(x)+Math.abs(y)+Math.abs(r),1)/m;
 
-        double FTVelocity = (x + y + r)/d * 2000; // Don't touch or it
-        double BTVelocity = (x - y + r)/d * 2000; // may NEVER work again...
+        double FLVelocity = (x + y + r)/d * 2000;
+        double BLVelocity = (x - y + r)/d * 2000;
         double FRVelocity = (x - y - r)/d * 2000;
         double BRVelocity = (x + y - r)/d * 2000;
 
-        FrontLeftMotor.setVelocity(FTVelocity);
-        BackLeftMotor.setVelocity(BTVelocity);
+        FrontLeftMotor.setVelocity(FLVelocity);
+        BackLeftMotor.setVelocity(BLVelocity);
         FrontRightMotor.setVelocity(FRVelocity);
         BackRightMotor.setVelocity(BRVelocity);
     }
