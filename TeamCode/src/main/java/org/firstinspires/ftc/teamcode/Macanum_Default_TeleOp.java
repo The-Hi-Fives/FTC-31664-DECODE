@@ -138,7 +138,11 @@ public class Macanum_Default_TeleOp extends OpMode {
             frontRightConveyor.setPower(0);
             velo = 0;
         }
-        if (velo != 0 && RightLaunch.getVelocity() > velo-100) {
+        // Backup Intake
+        if (gamepad2.x) {
+            velo = -500;
+        }
+        if (velo != 0 && RightLaunch.getVelocity() > velo-70 && LeftLaunch.getVelocity() > velo-70) {
             topConveyor.setPower(1);
         } else {
             topConveyor.setPower(0);
