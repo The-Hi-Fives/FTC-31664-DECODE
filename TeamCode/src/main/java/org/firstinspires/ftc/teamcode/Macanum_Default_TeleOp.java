@@ -203,6 +203,6 @@ public class Macanum_Default_TeleOp extends OpMode {
 
         MacanumDrive(x,y,r,ad);
         IntakeOuttake(AlternateVelocity);
-        Telemetry();
+        Telemetry(); // telemetry
     }
 }

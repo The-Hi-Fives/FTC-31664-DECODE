@@ -88,5 +88,6 @@ public class Red_Near_Launch_Auto extends LinearOpMode {
         Macanum(-1.0,0.0,0.0,2000);
         sleep(500);
         Macanum(0.0,0.0,0.0,0);
+        // no telemetry
     }
 }

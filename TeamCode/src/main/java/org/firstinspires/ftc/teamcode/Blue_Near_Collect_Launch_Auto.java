@@ -107,7 +107,7 @@ public class Blue_Near_Collect_Launch_Auto extends LinearOpMode {
         sleep(500);
         Macanum(0.0,0.0,0.0,0);
 
-
+        // no telemetry
 
     }
 }
