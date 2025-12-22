@@ -38,7 +38,7 @@ public class Macanum_Default_TeleOp extends OpMode {
         //
         LED.setPosition(0.277); // Sets the LED color to Red (Hopefully)
 
-        Camera = hardwareMap.get(HuskyLens.class,"Huskylens");
+        Camera = hardwareMap.get(HuskyLens.class,"HuskyLens");
         Camera.selectAlgorithm(HuskyLens.Algorithm.TAG_RECOGNITION);
 
         FrontLeftMotor = hardwareMap.get(DcMotorEx.class,"frontLeft");
