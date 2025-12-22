@@ -38,8 +38,8 @@ public class Macanum_Default_TeleOp extends OpMode {
 
         LED.setPosition(0.277); // Sets the LED color to Red (Hopefully)
 
-        //Camera = hardwareMap.get(HuskyLens.class,"Huskylens");
-        //Camera.selectAlgorithm(HuskyLens.Algorithm.TAG_RECOGNITION);
+        Camera = hardwareMap.get(HuskyLens.class,"Huskylens");
+        Camera.selectAlgorithm(HuskyLens.Algorithm.TAG_RECOGNITION);
 
         FrontLeftMotor = hardwareMap.get(DcMotorEx.class,"frontLeft");
         BackLeftMotor = hardwareMap.get(DcMotorEx.class,"backLeft");
@@ -183,22 +183,22 @@ public class Macanum_Default_TeleOp extends OpMode {
         double y = -gamepad1.left_stick_x;
         double r = -gamepad1.right_stick_x;
 
-        //HuskyLens.Block block = getTag(); // returns AprilTag Block
+        HuskyLens.Block block = getTag(); // returns AprilTag Block
 
         // The Logic for Aiming
         double ad = 0; // what is added to the rotation for aim
         AlternateVelocity = 0;
-        //if (block != null && block.id == 1 && gamepad1.y && currentState != State.AIMING) {
-        //    currentState = State.AIMING; // Changes state to AIMING
-        //} else {
-        //    if (gamepad1.y || block == null || block.id != 1.0 && block.id != 2.0) {
-        //        currentState = State.DEFAULT; // Changes state to DEFAULT
-        //    } else {
-        //        ad = clamp((double) block.x,-0.5,0.5); // Makes sure the ad is between -0.5 and 0.5
-        //        AlternatePos = normalize((block.width * block.height)/1000,PulleyMin,PulleyMax) * 120
-        //        AlternateVelocity = normalize((block.width * block.height)/1000,0,2000) * 2000
-        //    }
-        //}
+        if (block != null && block.id == 1 && gamepad1.y && currentState != State.AIMING) {
+            currentState = State.AIMING; // Changes state to AIMING
+        } else {
+            if (gamepad1.y || block == null || block.id != 1.0 && block.id != 2.0) {
+                currentState = State.DEFAULT; // Changes state to DEFAULT
+            } else {
+                ad = clamp((double) block.x,-0.5,0.5); // Makes sure the ad is between -0.5 and 0.5
+                //AlternatePos = normalize((block.width * block.height)/1000,PulleyMin,PulleyMax) * 120;
+                //AlternateVelocity = normalize((block.width * block.height)/1000,0,2000) * 2000;
+            }
+        }
         // Sets the Rotation Offset to the current when X is pressed on gamepad1
 
         MacanumDrive(x,y,r,ad);
