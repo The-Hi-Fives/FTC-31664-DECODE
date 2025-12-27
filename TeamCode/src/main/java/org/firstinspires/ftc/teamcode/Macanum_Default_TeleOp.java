@@ -94,7 +94,7 @@ public class Macanum_Default_TeleOp extends OpMode {
         telemetry.addLine("==== Telemetry ====");
 
     }
-    public void IntakeOuttake(double AlternateVelocity) {
+    public void IntakeOuttake(double LaunchVelocity) {
         // No Pulley? :\
         // Intake/Outtake
         if (gamepad2.a) {
