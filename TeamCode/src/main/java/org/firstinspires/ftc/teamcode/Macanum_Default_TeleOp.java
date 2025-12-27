@@ -99,7 +99,7 @@ public class Macanum_Default_TeleOp extends OpMode {
         // Intake/Outtake
         if (gamepad2.a) {
             // Outtake
-            Conveyor.setVelocity(500);
+            Conveyor.setVelocity(-500);
 
         }
         if (gamepad2.left_bumper || gamepad1.left_bumper) {
@@ -122,7 +122,7 @@ public class Macanum_Default_TeleOp extends OpMode {
         }
         // Backup Intake
         if (gamepad2.x) {
-            velo = -500;
+            velo = 500;
         }
         if (velo != 0 && RightLaunch.getVelocity() > velo-70 && LeftLaunch.getVelocity() > velo-70) {
             Conveyor.setVelocity(-500);
