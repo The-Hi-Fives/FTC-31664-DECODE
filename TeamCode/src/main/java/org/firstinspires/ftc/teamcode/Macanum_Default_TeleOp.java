@@ -125,7 +125,7 @@ public class Macanum_Default_TeleOp extends OpMode {
             velo = 500;
         }
         if (velo != 0 && RightLaunch.getVelocity() > velo-70 && LeftLaunch.getVelocity() > velo-70) {
-            Conveyor.setVelocity(-500);
+            Conveyor.setVelocity(500);
         } else {
             Conveyor.setPower(0);
         }
