@@ -1,15 +1,20 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-@Autonomous(name="Blue Near Collect Launch Auto", group="Default")
+import java.util.Arrays;
+import java.util.List;
+
+@Autonomous(name="Red Near Collect Launch Auto", group="Default")
 public class Red_Near_Collect_Launch_Auto extends LinearOpMode {
     DcMotorEx FrontRightMotor, BackRightMotor, FrontLeftMotor, BackLeftMotor, Intake, LeftLaunch, RightLaunch;
     DcMotorEx Conveyor;
+    HuskyLens Camera;
 
     public void Macanum(Double x,Double y,Double r,Integer Speed) {
         double d = Math.max(Math.abs(x)+Math.abs(y)+Math.abs(r),1);
@@ -24,8 +29,34 @@ public class Red_Near_Collect_Launch_Auto extends LinearOpMode {
         FrontRightMotor.setVelocity(FRVelocity);
         BackRightMotor.setVelocity(BRVelocity);
     }
+    public HuskyLens.Block getTag() {
+        List<HuskyLens.Block> blocks = Arrays.asList(Camera.blocks());
+        HuskyLens.Block targetBlock = null;
+        for (HuskyLens.Block block : blocks) {
+            if (block.id != 0) {
+                if (targetBlock != null) {
+                    if (block.width * block.height > targetBlock.width * targetBlock.height) { // Checks which AprilTag is the largest on the screen.
+                        targetBlock = block; // Sets block as currentBlock
+                    }
+                } else { // If not currentBlock then set block as currentBlock.
+                    targetBlock = block;
+                }
+            }
+        }
+        if (targetBlock != null) {
+            telemetry.addData("ID", targetBlock.id);
+        }
+        return targetBlock; // Returns The AprilTag Block
+    }
+    public static double clamp(double value, double min, double max) {
+        return Math.max(min, Math.min(max, value));
+    }
     @Override
     public void runOpMode() throws InterruptedException {
+
+        Camera = hardwareMap.get(HuskyLens.class,"HuskyLens");
+        Camera.selectAlgorithm(HuskyLens.Algorithm.TAG_RECOGNITION);
+
         FrontLeftMotor = hardwareMap.get(DcMotorEx.class,"frontLeft");
         BackLeftMotor = hardwareMap.get(DcMotorEx.class,"backLeft");
         FrontRightMotor = hardwareMap.get(DcMotorEx.class,"frontRight");
@@ -56,52 +87,70 @@ public class Red_Near_Collect_Launch_Auto extends LinearOpMode {
         waitForStart();
 
         // Sequence
-        Intake.setVelocity(-1872);
+        Intake.setVelocity(1872);
         Macanum(1.0,0.0,0.0,2000);
-        sleep(1000);
+        sleep(1500);
         Macanum(0.0,0.0,0.0,0);
 
         // Aim-bot
+        HuskyLens.Block block = getTag();
+        if (block != null && block.id == 5){
+            telemetry.addData("data",Math.abs(getTag().x - 160));
+            telemetry.update();
+            while (Math.abs(getTag().x - 160) > 5 && opModeIsActive()){
+                telemetry.addData("data",Math.abs(getTag().x - 160));
+                telemetry.update();
+                Macanum(0.0,0.0,clamp(getTag().x - 160,-0.5,0.5),100);
+            }
+        }
 
         LeftLaunch.setVelocity(2300);
         RightLaunch.setVelocity(2300);
 
         // Wait for Velocity
-        while (RightLaunch.getVelocity() != 2300 || LeftLaunch.getVelocity() != 2300){
+        while (RightLaunch.getVelocity() != 2300 || LeftLaunch.getVelocity() != 2300 && opModeIsActive()){
             sleep(100);
         }
 
         // Enable Conveyor
         Conveyor.setVelocity(500);
-        sleep(500); // comment
-        Conveyor.setVelocity(0);
-        sleep(500);
-        Conveyor.setVelocity(500);
-        sleep(500);
-        Conveyor.setVelocity(0);
-        sleep(500);
-        Conveyor.setVelocity(500);
 
-        sleep(5000);
+        sleep(3000);
 
         // Turn Robot
         Macanum(0.0,0.0,1.0,900);
-        sleep(500);
-        Macanum(0.0,0.0,0.0,0);
+        sleep(1000);
 
         // Move backwards and intake
-        sleep(100);
-        Intake.setVelocity(1872);
-        Macanum(-1.0,0.0,0.0,1000);
-        sleep(500);
+        Macanum(1.0,0.0,0.0,500);
+        sleep(2000);
 
         // Move forward and Turn
-        Macanum(1.0,0.0,0.0,1000);
-        sleep(500);
-        Macanum(0.0,0.0,1.0,900);
-        sleep(500);
+        Macanum(-1.0,0.0,0.0,500);
+        sleep(2000);
+        Macanum(0.0,0.0,-1.0,900);
+        sleep(1000);
 
         // Aim-bot
+        block = getTag();
+        if (block != null && block.id == 5){
+            while (Math.abs(getTag().x - 160) > 5 && opModeIsActive()){
+                telemetry.addData("data",Math.abs(getTag().x - 160));
+                telemetry.update();
+                Macanum(0.0,0.0, clamp(getTag().x - 160,-0.5,0.5),500);
+            }
+        }
+
+        LeftLaunch.setVelocity(2300);
+        RightLaunch.setVelocity(2300);
+
+        // Wait for Velocity
+        while (RightLaunch.getVelocity() != 2300 || LeftLaunch.getVelocity() != 2300 && opModeIsActive()){
+            sleep(100);
+        }
+
+        // Enable Conveyor
+        Conveyor.setVelocity(500);
 
         // Out of zone
         sleep(5000);

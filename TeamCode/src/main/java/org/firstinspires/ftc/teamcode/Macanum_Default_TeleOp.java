@@ -164,15 +164,18 @@ public class Macanum_Default_TeleOp extends OpMode {
 
         // The Logic for Aiming
         double ad = 0; // what is added to the rotation for aim
-        if (block != null && (block.id == 1 || block.id == 5) && gamepad1.y && currentState != State.AIMING) {
+        if (block != null && (block.id == 1 || block.id == 5) && gamepad1.left_trigger > 0.5 && currentState != State.AIMING) {
             currentState = State.AIMING; // Changes state to AIMING
         } else {
-            if (gamepad1.y || block == null || (block.id != 1 && block.id != 5)) {
+            if (gamepad1.left_trigger > 0.5 || block == null || (block.id != 1 && block.id != 5)) {
                 currentState = State.DEFAULT; // Changes state to DEFAULT
-            } else {
-                ad = clamp((double) block.x - 160,-1.0,1.0); // Makes sure the ad is between -0.5 and 0.5
-                //AlternatePos = normalize((block.width * block.height)/1000,PulleyMin,PulleyMax) * 120;
-                //AlternateVelocity = normalize((block.width * block.height)/1000,0,2000) * 2000;
+            }
+            if (currentState == State.AIMING){
+                //if (10 < Math.abs(clamp((double) block.x - 160,-1.0,1.0))) {
+                    ad = clamp((double) block.x - 160,-1.0,1.0); // Makes sure the ad is between -0.5 and 0.5
+                    //AlternatePos = normalize((block.width * block.height)/1000,PulleyMin,PulleyMax) * 120;
+                    //AlternateVelocity = normalize((block.width * block.height)/1000,0,2000) * 2000;
+                //}
             }
         }
         // Sets the Rotation Offset to the current when X is pressed on gamepad1
