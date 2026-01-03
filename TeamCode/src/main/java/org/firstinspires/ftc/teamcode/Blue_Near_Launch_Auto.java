@@ -10,8 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 @Autonomous(name="Blue Near Launch Auto", group="Default")
 public class Blue_Near_Launch_Auto extends LinearOpMode {
     DcMotorEx FrontRightMotor, BackRightMotor, FrontLeftMotor, BackLeftMotor, Intake, LeftLaunch, RightLaunch;
-    CRServo backLeftConveyor, backRightConveyor, frontLeftConveyor, frontRightConveyor, topConveyor;
-
+    DcMotorEx Conveyor;
     public void Macanum(Double x,Double y,Double r,Integer Speed) {
         double d = Math.max(Math.abs(x)+Math.abs(y)+Math.abs(r),1);
 
@@ -36,11 +35,7 @@ public class Blue_Near_Launch_Auto extends LinearOpMode {
         RightLaunch = hardwareMap.get(DcMotorEx.class,"rightLaunch");
         LeftLaunch = hardwareMap.get(DcMotorEx.class,"leftLaunch");
 
-        topConveyor = hardwareMap.get(CRServo.class,"topC");
-        backLeftConveyor = hardwareMap.get(CRServo.class,"backLeftC");
-        backRightConveyor = hardwareMap.get(CRServo.class,"backRightC");
-        frontLeftConveyor = hardwareMap.get(CRServo.class,"frontLeftC");
-        frontRightConveyor = hardwareMap.get(CRServo.class,"frontRightC");
+        Conveyor = hardwareMap.get(DcMotorEx.class,"Conveyor");
 
         FrontRightMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         BackRightMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
@@ -52,9 +47,6 @@ public class Blue_Near_Launch_Auto extends LinearOpMode {
         FrontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         BackRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         RightLaunch.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRightConveyor.setDirection(DcMotorSimple.Direction.REVERSE);
-        frontRightConveyor.setDirection(DcMotorSimple.Direction.REVERSE);
-        topConveyor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         waitForStart();
 
@@ -70,13 +62,7 @@ public class Blue_Near_Launch_Auto extends LinearOpMode {
             sleep(100);
         }
 
-        topConveyor.setPower(1);
-        backLeftConveyor.setPower(1);
-        frontLeftConveyor.setPower(1);
-        backRightConveyor.setPower(1);
-        frontRightConveyor.setPower(1);
-
-
+        Conveyor.setVelocity(500);
 
         sleep(5000);
         Macanum(0.0,1.0,0.0,2000);
