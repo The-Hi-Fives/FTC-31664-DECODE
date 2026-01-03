@@ -169,8 +169,7 @@ public class Macanum_Default_TeleOp extends OpMode {
         } else {
             if (gamepad1.left_trigger > 0.5 || block == null || (block.id != 1 && block.id != 5)) {
                 currentState = State.DEFAULT; // Changes state to DEFAULT
-            }
-            if (currentState == State.AIMING){
+            } else {
                 //if (10 < Math.abs(clamp((double) block.x - 160,-1.0,1.0))) {
                     ad = clamp((double) block.x - 160,-1.0,1.0); // Makes sure the ad is between -0.5 and 0.5
                     //AlternatePos = normalize((block.width * block.height)/1000,PulleyMin,PulleyMax) * 120;
