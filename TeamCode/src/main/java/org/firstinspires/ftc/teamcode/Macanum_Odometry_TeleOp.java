@@ -33,16 +33,17 @@ public class Macanum_Odometry_TeleOp extends OpMode {
     static double PulleyMax = 180, PulleyMin = 0;
     @Override
     public void init() {
-        Odometry = hardwareMap.get(SparkFunOTOS.class, "Odometry");
-        Odometry.initialize();
-        Odometry.calibrateImu();
 
-        Odometry.setAngularScalar(1);//.3660377);
+        //Odometry = hardwareMap.get(SparkFunOTOS.class, "Odometry");
+        //Odometry.initialize();
+        //Odometry.calibrateImu();
 
-        Odometry.setLinearUnit(DistanceUnit.INCH);
+        //Odometry.setAngularScalar(1);//.3660377);
 
-        Odometry.setPosition(new SparkFunOTOS.Pose2D(0,0,0));
-        Odometry.setOffset(new SparkFunOTOS.Pose2D(0.125,1.25,0));
+        //Odometry.setLinearUnit(DistanceUnit.INCH);
+
+        //Odometry.setPosition(new SparkFunOTOS.Pose2D(0,0,0));
+        //Odometry.setOffset(new SparkFunOTOS.Pose2D(0.125,1.25,0));
         // 175.0?
 
         //LED.setPosition(0.277); // Sets the LED color to Red

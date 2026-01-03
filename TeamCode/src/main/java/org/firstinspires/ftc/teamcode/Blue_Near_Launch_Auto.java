@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -11,6 +12,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 public class Blue_Near_Launch_Auto extends LinearOpMode {
     DcMotorEx FrontRightMotor, BackRightMotor, FrontLeftMotor, BackLeftMotor, Intake, LeftLaunch, RightLaunch;
     DcMotorEx Conveyor;
+    HuskyLens Camera;
     public void Macanum(Double x,Double y,Double r,Integer Speed) {
         double d = Math.max(Math.abs(x)+Math.abs(y)+Math.abs(r),1);
 
@@ -55,13 +57,21 @@ public class Blue_Near_Launch_Auto extends LinearOpMode {
         sleep(1000);
         Macanum(0.0,0.0,0.0,0);
 
-        LeftLaunch.setVelocity(2300);
-        RightLaunch.setVelocity(2300);
+        LeftLaunch.setVelocity(2350);
+        RightLaunch.setVelocity(2350);
 
-        while (RightLaunch.getVelocity() < 2250 || LeftLaunch.getVelocity() < 2250){
+        while (RightLaunch.getVelocity() != 2300 || LeftLaunch.getVelocity() != 2300){
             sleep(100);
         }
 
+        Conveyor.setVelocity(500);
+        sleep(500);
+        Conveyor.setVelocity(0);
+        sleep(500);
+        Conveyor.setVelocity(500);
+        sleep(500);
+        Conveyor.setVelocity(0);
+        sleep(500);
         Conveyor.setVelocity(500);
 
         sleep(5000);

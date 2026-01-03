@@ -59,10 +59,18 @@ public class Red_Near_Launch_Auto extends LinearOpMode {
         LeftLaunch.setVelocity(2300);
         RightLaunch.setVelocity(2300);
 
-        while (RightLaunch.getVelocity() < 2250 || LeftLaunch.getVelocity() < 2250){
+        while (RightLaunch.getVelocity() != 2300 || LeftLaunch.getVelocity() != 2300){
             sleep(100);
         }
 
+        Conveyor.setVelocity(500);
+        sleep(500);
+        Conveyor.setVelocity(0);
+        sleep(500);
+        Conveyor.setVelocity(500);
+        sleep(500);
+        Conveyor.setVelocity(0);
+        sleep(500);
         Conveyor.setVelocity(500);
 
         sleep(5000);

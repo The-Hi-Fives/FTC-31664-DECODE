@@ -54,13 +54,21 @@ public class Universal_far_Launch_Auto extends LinearOpMode {
         // Sequence
         Macanum(0.0,0.0,0.0,0);
 
-        LeftLaunch.setVelocity(2400);
-        RightLaunch.setVelocity(2400);
+        LeftLaunch.setVelocity(2500);
+        RightLaunch.setVelocity(2500);
 
-        while (RightLaunch.getVelocity() < 2350 || LeftLaunch.getVelocity() < 2350){
+        while (RightLaunch.getVelocity() != 2500 || LeftLaunch.getVelocity() != 2500){
             sleep(100);
         }
 
+        Conveyor.setVelocity(500);
+        sleep(500);
+        Conveyor.setVelocity(0);
+        sleep(500);
+        Conveyor.setVelocity(500);
+        sleep(500);
+        Conveyor.setVelocity(0);
+        sleep(500);
         Conveyor.setVelocity(500);
 
         sleep(5000);

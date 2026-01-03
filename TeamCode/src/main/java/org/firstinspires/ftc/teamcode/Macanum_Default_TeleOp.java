@@ -3,14 +3,9 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.HardwareDevice;
-import com.qualcomm.robotcore.hardware.Servo;
-
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 import java.util.Arrays;
 import java.util.List;
@@ -20,23 +15,15 @@ public class Macanum_Default_TeleOp extends OpMode {
     DcMotorEx FrontRightMotor, BackRightMotor, FrontLeftMotor, BackLeftMotor, Intake, LeftLaunch, RightLaunch;
     DcMotorEx Conveyor;
     HuskyLens Camera;
-    Servo LED;
-    double PulleyPos = 0;
     public enum State {
         DEFAULT,
         AIMING,
     }
 
     State currentState = State.DEFAULT;
-    double AlternateVelocity = 0;
-    static double PulleyMax = 180, PulleyMin = 0;
     @Override
     public void init() {
         // 175.0?
-
-        LED = hardwareMap.get(Servo.class,"LED");
-        //
-        LED.setPosition(0.277); // Sets the LED color to Red (Hopefully)
 
         Camera = hardwareMap.get(HuskyLens.class,"HuskyLens");
         Camera.selectAlgorithm(HuskyLens.Algorithm.TAG_RECOGNITION);
@@ -76,6 +63,9 @@ public class Macanum_Default_TeleOp extends OpMode {
                 }
             }
         }
+        if (targetBlock != null) {
+            telemetry.addData("ID",targetBlock.id);
+        }
         return targetBlock; // Returns The AprilTag Block
     }
     public void Telemetry() {
@@ -94,7 +84,7 @@ public class Macanum_Default_TeleOp extends OpMode {
         telemetry.addLine("==== Telemetry ====");
 
     }
-    public void IntakeOuttake(double LaunchVelocity) {
+    public void IntakeOuttake() {
         // No Pulley? :\
         // Intake/Outtake
         if (gamepad2.a) {
@@ -109,35 +99,33 @@ public class Macanum_Default_TeleOp extends OpMode {
             Conveyor.setVelocity(250);
         }
         // Intake
-        if (gamepad2.left_bumper || gamepad1.left_bumper) {
-            Intake.setVelocity(-1872);
-        } else if (gamepad2.right_bumper || gamepad1.right_bumper) {
+        if (gamepad2.right_bumper || gamepad1.right_bumper) {
             Intake.setVelocity(1872);
         } else {
             Intake.setVelocity(0);
         }
-        double velo = 0;
+        double velocity;
         // Launching
         if (gamepad2.b || gamepad2.y) {
             if (gamepad2.b) {
-                velo = 2500;
+                velocity = 2500;
             } else {
-                velo = 2300;
+                velocity = 2350;
             }
         } else {
-            velo = 0;
+            velocity = 0;
         }
         // Backup Intake
         if (gamepad2.x) {
-            velo = 500;
+            velocity = 500;
         }
-        if (velo != 0 && RightLaunch.getVelocity() > velo-70 && LeftLaunch.getVelocity() > velo-70) {
+        if (velocity != 0 && RightLaunch.getVelocity() > velocity-20 && LeftLaunch.getVelocity() > velocity-20) {
             Conveyor.setVelocity(500);
         } else {
             Conveyor.setPower(0);
         }
-        RightLaunch.setVelocity(velo);
-        LeftLaunch.setVelocity(velo);
+        RightLaunch.setVelocity(velocity);
+        LeftLaunch.setVelocity(velocity);
     }
     public void MacanumDrive(double x, double y, double r, double ad) {
         r += ad;
@@ -176,22 +164,21 @@ public class Macanum_Default_TeleOp extends OpMode {
 
         // The Logic for Aiming
         double ad = 0; // what is added to the rotation for aim
-        AlternateVelocity = 0;
-        if (block != null && block.id == 1 && gamepad1.y && currentState != State.AIMING) {
+        if (block != null && (block.id == 1 || block.id == 5) && gamepad1.y && currentState != State.AIMING) {
             currentState = State.AIMING; // Changes state to AIMING
         } else {
-            if (gamepad1.y || block == null || block.id != 1.0 && block.id != 2.0) {
+            if (gamepad1.y || block == null || (block.id != 1 && block.id != 5)) {
                 currentState = State.DEFAULT; // Changes state to DEFAULT
             } else {
-                ad = clamp((double) block.x,-0.5,0.5); // Makes sure the ad is between -0.5 and 0.5
+                ad = clamp((double) block.x - 160,-1.0,1.0); // Makes sure the ad is between -0.5 and 0.5
                 //AlternatePos = normalize((block.width * block.height)/1000,PulleyMin,PulleyMax) * 120;
                 //AlternateVelocity = normalize((block.width * block.height)/1000,0,2000) * 2000;
             }
         }
         // Sets the Rotation Offset to the current when X is pressed on gamepad1
 
-        MacanumDrive(x,y,r,ad);
-        IntakeOuttake(AlternateVelocity);
+        MacanumDrive(x,y,r,ad/10);
+        IntakeOuttake();
         Telemetry(); // telemetry
     }
 }

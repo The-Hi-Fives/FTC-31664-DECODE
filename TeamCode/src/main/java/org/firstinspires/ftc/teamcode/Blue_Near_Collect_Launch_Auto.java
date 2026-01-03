@@ -68,11 +68,19 @@ public class Blue_Near_Collect_Launch_Auto extends LinearOpMode {
         RightLaunch.setVelocity(2300);
 
         // Wait for Velocity
-        while (RightLaunch.getVelocity() < 2250 || LeftLaunch.getVelocity() < 2250){
+        while (RightLaunch.getVelocity() != 2300 || LeftLaunch.getVelocity() != 2300){
             sleep(100);
         }
 
-        // Enable Conveyors
+        // Enable Conveyor
+        Conveyor.setVelocity(500);
+        sleep(500);
+        Conveyor.setVelocity(0);
+        sleep(500);
+        Conveyor.setVelocity(500);
+        sleep(500);
+        Conveyor.setVelocity(0);
+        sleep(500);
         Conveyor.setVelocity(500);
 
         sleep(5000);
