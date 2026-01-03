@@ -73,7 +73,7 @@ public class Red_Near_Collect_Launch_Auto extends LinearOpMode {
 
         // Enable Conveyor
         Conveyor.setVelocity(500);
-        sleep(500);
+        sleep(500); // comment
         Conveyor.setVelocity(0);
         sleep(500);
         Conveyor.setVelocity(500);
