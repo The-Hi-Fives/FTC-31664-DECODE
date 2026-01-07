@@ -12,12 +12,16 @@ import java.util.List;
 
 @Autonomous(name="Red Near Collect Launch Auto", group="Default")
 public class Red_Near_Collect_Launch_Auto extends LinearOpMode {
-    DcMotorEx FrontRightMotor, BackRightMotor, FrontLeftMotor, BackLeftMotor, Intake, LeftLaunch, RightLaunch;
-    DcMotorEx Conveyor;
+    DcMotorEx FrontRightMotor, BackRightMotor, FrontLeftMotor, BackLeftMotor, Intake, LeftLaunch, RightLaunch, Conveyor;
     HuskyLens Camera;
 
     public void Macanum(Double x,Double y,Double r,Integer Speed) {
         double d = Math.max(Math.abs(x)+Math.abs(y)+Math.abs(r),1);
+
+        // turn y into x and vice versa
+        double send = y;
+        y = x;
+        x = send;
 
         double FTVelocity = (x + y + r)/d * Speed; // Don't touch or it
         double BTVelocity = (x - y + r)/d * Speed; // may NEVER work again...
@@ -50,6 +54,18 @@ public class Red_Near_Collect_Launch_Auto extends LinearOpMode {
     }
     public static double clamp(double value, double min, double max) {
         return Math.max(min, Math.min(max, value));
+    }
+    public void aim_bot(){
+        HuskyLens.Block block = getTag();
+        if (block != null && block.id == 5){
+            telemetry.addData("data",Math.abs(getTag().x - 160));
+            telemetry.update();
+            while (Math.abs(getTag().x - 160) > 5 && opModeIsActive()){
+                telemetry.addData("data",Math.abs(getTag().x - 160));
+                telemetry.update();
+                Macanum(0.0,0.0,clamp(getTag().x - 160,-0.5,0.5),100);
+            }
+        }
     }
     @Override
     public void runOpMode() throws InterruptedException {
@@ -87,22 +103,14 @@ public class Red_Near_Collect_Launch_Auto extends LinearOpMode {
         waitForStart();
 
         // Sequence
+        // head back to have space to launch
         Intake.setVelocity(1872);
-        Macanum(1.0,0.0,0.0,2000);
+        Macanum(0.0,-1.0,0.0,2000);
         sleep(1500);
         Macanum(0.0,0.0,0.0,0);
 
         // Aim-bot
-        HuskyLens.Block block = getTag();
-        if (block != null && block.id == 5){
-            telemetry.addData("data",Math.abs(getTag().x - 160));
-            telemetry.update();
-            while (Math.abs(getTag().x - 160) > 5 && opModeIsActive()){
-                telemetry.addData("data",Math.abs(getTag().x - 160));
-                telemetry.update();
-                Macanum(0.0,0.0,clamp(getTag().x - 160,-0.5,0.5),100);
-            }
-        }
+        aim_bot();
 
         LeftLaunch.setVelocity(2300);
         RightLaunch.setVelocity(2300);
@@ -117,30 +125,24 @@ public class Red_Near_Collect_Launch_Auto extends LinearOpMode {
 
         sleep(3000);
 
-        // Turn Robot
+        // Turn Robot 135 degrees
         Macanum(0.0,0.0,1.0,900);
         sleep(1000);
 
         // Move backwards and intake
-        Macanum(1.0,0.0,0.0,500);
+        Macanum(0.0,-1.0,0.0,500);
         sleep(2000);
 
-        // Move forward and Turn
-        Macanum(-1.0,0.0,0.0,500);
+        // Move forward and Turn 135 degrees
+        Macanum(0.0,1.0,0.0,500);
         sleep(2000);
         Macanum(0.0,0.0,-1.0,900);
-        sleep(1000);
+        sleep(1000); // however long it takes
 
         // Aim-bot
-        block = getTag();
-        if (block != null && block.id == 5){
-            while (Math.abs(getTag().x - 160) > 5 && opModeIsActive()){
-                telemetry.addData("data",Math.abs(getTag().x - 160));
-                telemetry.update();
-                Macanum(0.0,0.0, clamp(getTag().x - 160,-0.5,0.5),500);
-            }
-        }
+        aim_bot();
 
+        // start Launch Motors
         LeftLaunch.setVelocity(2300);
         RightLaunch.setVelocity(2300);
 
@@ -154,16 +156,9 @@ public class Red_Near_Collect_Launch_Auto extends LinearOpMode {
 
         // Out of zone
         sleep(5000);
-        Macanum(0.0,1.0,0.0,2000);
-        sleep(500);
         Macanum(1.0,0.0,0.0,2000);
-        sleep(750);
-        Macanum(0.0,0.0,1.0,900);
-        sleep(2000);
-        Macanum(-1.0,0.0,0.0,2000);
-        sleep(500);
+        sleep(1000);
         Macanum(0.0,0.0,0.0,0);
-
         // no telemetry :P
     }
 }

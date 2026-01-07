@@ -15,12 +15,8 @@ public class Macanum_Default_TeleOp extends OpMode {
     DcMotorEx FrontRightMotor, BackRightMotor, FrontLeftMotor, BackLeftMotor, Intake, LeftLaunch, RightLaunch;
     DcMotorEx Conveyor;
     HuskyLens Camera;
-    public enum State {
-        DEFAULT,
-        AIMING,
-    }
-
-    State currentState = State.DEFAULT;
+    boolean aiming = false;
+    boolean debounce = false;
     @Override
     public void init() {
         // 175.0?
@@ -64,25 +60,28 @@ public class Macanum_Default_TeleOp extends OpMode {
             }
         }
         if (targetBlock != null) {
-            telemetry.addData("ID",targetBlock.id);
+            telemetry.addData("ID ::",targetBlock.id);
         }
         return targetBlock; // Returns The AprilTag Block
     }
+
     public void Telemetry() {
+        telemetry.addData("Aiming ::", aiming);
         telemetry.addLine("==== Controls ====");
         telemetry.addLine("Game Pad 1: (Driver) ==");
         telemetry.addLine("Left Stick: Macanum Drive");
         telemetry.addLine("Right Stick: Rotation");
+        telemetry.addLine("Left Trigger: Toggle Aiming");
         telemetry.addLine("================");
         telemetry.addLine("Game Pad 2: (Attachments) ==");
         telemetry.addLine("A (Cross) Button: Spit out");
         telemetry.addLine("B (Circle) Button: Launch (Far)");
         telemetry.addLine("Y (Triangle) Button: Launch (Near)");
+        telemetry.addLine("X (Square) Button: Backup Intake");
+        telemetry.addLine("D-Pad Up/Down: Manual Conveyor");
         telemetry.addLine("== Both Game Pads ==");
         telemetry.addLine("Left Bumper: Intake");
         telemetry.addLine("Right Bumper: Outtake");
-        telemetry.addLine("==== Telemetry ====");
-
     }
     public void IntakeOuttake() {
         // No Pulley? :\
@@ -92,11 +91,13 @@ public class Macanum_Default_TeleOp extends OpMode {
             Conveyor.setVelocity(-500);
             Intake.setVelocity(-1872);
         }
-        // Troubleshoot Controls
+        // Manual Conveyor Input
         if (gamepad2.dpad_down) {
             Conveyor.setVelocity(-250);
         } else if (gamepad2.dpad_up) {
             Conveyor.setVelocity(250);
+        } else {
+            Conveyor.setVelocity(0);
         }
         // Intake
         if (gamepad2.right_bumper || gamepad1.right_bumper) {
@@ -106,12 +107,10 @@ public class Macanum_Default_TeleOp extends OpMode {
         }
         double velocity;
         // Launching
-        if (gamepad2.b || gamepad2.y) {
-            if (gamepad2.b) {
-                velocity = 2500;
-            } else {
-                velocity = 2350;
-            }
+        if (gamepad2.b) {
+            velocity = 2500;
+        } else if (gamepad2.y) {
+            velocity = 2350;
         } else {
             velocity = 0;
         }
@@ -149,13 +148,14 @@ public class Macanum_Default_TeleOp extends OpMode {
         BackRightMotor.setVelocity(BRVelocity);
     }
     public static double clamp(double value, double min, double max) {
-        return Math.max(min, Math.min(max, value));
+        return Math.max(min, Math.min(max, value)); // Makes sure a value is in between two numbers.
     }
     public static double normalize(double value, double min, double max) {
-        return (value - min)/(max - min); // returns a number between 0 and 1
+        return (value - min)/(max - min); // Returns a number between 0 and 1
     }
     @Override
     public void loop() {
+        telemetry.addLine("==== Telemetry ===="); // For formatting :D
         double x = gamepad1.left_stick_y;
         double y = -gamepad1.left_stick_x;
         double r = -gamepad1.right_stick_x;
@@ -163,21 +163,22 @@ public class Macanum_Default_TeleOp extends OpMode {
         HuskyLens.Block block = getTag(); // returns AprilTag Block
 
         // The Logic for Aiming
-        double ad = 0; // what is added to the rotation for aim
-        if (block != null && (block.id == 1 || block.id == 5) && gamepad1.left_trigger > 0.5 && currentState != State.AIMING) {
-            currentState = State.AIMING; // Changes state to AIMING
+        // The debounce variable is used for "just pressed" input
+        double ad = 0; // What is added to the rotation for aim
+        if (gamepad1.left_trigger > 0.5 && !debounce) {
+            aiming = !aiming; // Toggle boolean
+            debounce = true;
         } else {
-            if (gamepad1.left_trigger > 0.5 || block == null || (block.id != 1 && block.id != 5)) {
-                currentState = State.DEFAULT; // Changes state to DEFAULT
-            } else {
-                //if (10 < Math.abs(clamp((double) block.x - 160,-1.0,1.0))) {
-                    ad = clamp((double) block.x - 160,-1.0,1.0); // Makes sure the ad is between -0.5 and 0.5
-                    //AlternatePos = normalize((block.width * block.height)/1000,PulleyMin,PulleyMax) * 120;
-                    //AlternateVelocity = normalize((block.width * block.height)/1000,0,2000) * 2000;
-                //}
+            debounce = false;
+        }
+        if (aiming && block != null) { // Aim if aiming is enabled and block exists
+            double screen_middle = (double) block.x - 160; // 160 being half of 320, the x screen resolution
+            if (10 < Math.abs(screen_middle)) { // Check if it's in a certain threshold (i.e. more than 10)
+                ad = clamp(screen_middle,-1.0,1.0); // Makes sure the ad is between -1.0 and 1.0
+                //AlternatePos = normalize((block.width * block.height)/1000,PulleyMin,PulleyMax) * 120;
+                //AlternateVelocity = normalize((block.width * block.height)/1000,0,2000) * 2000;
             }
         }
-        // Sets the Rotation Offset to the current when X is pressed on gamepad1
 
         MacanumDrive(x,y,r,ad/10);
         IntakeOuttake();
