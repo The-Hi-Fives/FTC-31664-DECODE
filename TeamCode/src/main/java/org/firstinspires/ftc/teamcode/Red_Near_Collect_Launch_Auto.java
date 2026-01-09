@@ -19,7 +19,7 @@ public class Red_Near_Collect_Launch_Auto extends LinearOpMode {
         double d = Math.max(Math.abs(x)+Math.abs(y)+Math.abs(r),1);
 
         // turn y into x and vice versa
-        double send = y;
+        double send = -y;
         y = x;
         x = send;
 
