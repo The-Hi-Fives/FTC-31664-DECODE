@@ -58,13 +58,16 @@ public class Red_Near_Collect_Launch_Auto extends LinearOpMode {
     public void aim_bot(){
         HuskyLens.Block block = getTag();
         if (block != null && block.id == 5){
-            telemetry.addData("data",Math.abs(getTag().x - 160));
-            telemetry.update();
-            while (Math.abs(getTag().x - 160) > 5 && opModeIsActive()){
-                telemetry.addData("data",Math.abs(getTag().x - 160));
-                telemetry.update();
-                Macanum(0.0,0.0,clamp(getTag().x - 160,-0.5,0.5),100);
+            double screen_middle_x = (double) block.x - 160;
+            while (2 >= Math.abs(screen_middle_x) && opModeIsActive()){
+                block = getTag();
+                if (block == null){
+                    break;
+                }
+                screen_middle_x = (double) block.x - 160;
+                Macanum(0.0,0.0,-clamp(screen_middle_x,-1.0,1.0),50);
             }
+            Macanum(0.0,0.0,0.0,0);
         }
     }
     @Override
@@ -106,58 +109,69 @@ public class Red_Near_Collect_Launch_Auto extends LinearOpMode {
         // head back to have space to launch
         Intake.setVelocity(1872);
         Macanum(0.0,-1.0,0.0,2000);
-        sleep(1500);
-        Macanum(0.0,0.0,0.0,0);
+        sleep(1300);
 
         // Aim-bot
         aim_bot();
 
-        LeftLaunch.setVelocity(2300);
-        RightLaunch.setVelocity(2300);
+        int launcherVelocity = 2500;
+
+        LeftLaunch.setVelocity(launcherVelocity);
+        RightLaunch.setVelocity(launcherVelocity);
 
         // Wait for Velocity
-        while (RightLaunch.getVelocity() != 2300 || LeftLaunch.getVelocity() != 2300 && opModeIsActive()){
+        while (RightLaunch.getVelocity() != launcherVelocity || LeftLaunch.getVelocity() != launcherVelocity && opModeIsActive()){
             sleep(100);
         }
+        sleep(1000);
 
         // Enable Conveyor
         Conveyor.setVelocity(500);
 
-        sleep(3000);
+        sleep(1000);
+
+        Conveyor.setVelocity(0);
+
+        sleep(5000);
+
+        int turnTime = 1500;
 
         // Turn Robot 135 degrees
         Macanum(0.0,0.0,1.0,900);
-        sleep(1000);
+        sleep(turnTime);
+
+        int intakeTime = 4000;
 
         // Move backwards and intake
         Macanum(0.0,-1.0,0.0,500);
-        sleep(2000);
+        sleep(intakeTime);
+        Macanum(0.0,1.0,0.0,500);
+        sleep(intakeTime);
 
         // Move forward and Turn 135 degrees
-        Macanum(0.0,1.0,0.0,500);
-        sleep(2000);
         Macanum(0.0,0.0,-1.0,900);
-        sleep(1000); // however long it takes
+        sleep(turnTime); // however long it takes
 
         // Aim-bot
         aim_bot();
 
         // start Launch Motors
-        LeftLaunch.setVelocity(2300);
-        RightLaunch.setVelocity(2300);
+        LeftLaunch.setVelocity(launcherVelocity);
+        RightLaunch.setVelocity(launcherVelocity);
 
         // Wait for Velocity
-        while (RightLaunch.getVelocity() != 2300 || LeftLaunch.getVelocity() != 2300 && opModeIsActive()){
+        while (RightLaunch.getVelocity() != launcherVelocity || LeftLaunch.getVelocity() != launcherVelocity && opModeIsActive()){
             sleep(100);
         }
-
+        sleep(1000);
         // Enable Conveyor
         Conveyor.setVelocity(500);
 
         // Out of zone
-        sleep(5000);
-        Macanum(1.0,0.0,0.0,2000);
-        sleep(1000);
+        sleep(2000);
+        Conveyor.setVelocity(0);
+        Macanum(-1.0,0.0,0.0,2000);
+        sleep(700);
         Macanum(0.0,0.0,0.0,0);
         // no telemetry :P
     }

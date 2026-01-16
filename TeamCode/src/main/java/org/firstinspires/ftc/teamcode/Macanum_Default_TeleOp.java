@@ -118,8 +118,10 @@ public class Macanum_Default_TeleOp extends OpMode {
         if (gamepad2.x) {
             velocity = 500;
         }
-        if (velocity != 0 && RightLaunch.getVelocity() > velocity-20 && LeftLaunch.getVelocity() > velocity-20) {
-            Conveyor.setVelocity(500);
+        if (gamepad2.right_trigger >= 0.5) {
+            Conveyor.setVelocity(400);
+        } else if (velocity != 0 && RightLaunch.getVelocity() > velocity-50 && LeftLaunch.getVelocity() > velocity-50) {
+            Conveyor.setVelocity(600);
         } else {
             Conveyor.setPower(0);
         }
