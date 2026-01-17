@@ -58,17 +58,28 @@ public class Red_Near_Collect_Launch_Auto extends LinearOpMode {
     public void aim_bot(){
         HuskyLens.Block block = getTag();
         if (block != null && block.id == 5){
-            double screen_middle_x = (double) block.x - 160;
-            while (2 >= Math.abs(screen_middle_x) && opModeIsActive()){
+            double screen_middle_x;
+            int fails = 0;
+            while (opModeIsActive()){
                 block = getTag();
+                screen_middle_x = block.x - 160;
                 if (block == null){
+                    fails += 1;
+                    continue;
+                } else {
+                    fails = 0;
+                }
+                if (fails >= 30){
+                    break;
+                }
+                if (!(5.0 < Math.abs(screen_middle_x))){
                     break;
                 }
                 screen_middle_x = (double) block.x - 160;
-                Macanum(0.0,0.0,-clamp(screen_middle_x,-1.0,1.0),50);
+                Macanum(0.0,0.0,-clamp(screen_middle_x,-1.0,1.0),50); // clamp
             }
-            Macanum(0.0,0.0,0.0,0);
         }
+        Macanum(0.0,0.0,0.0,0);
     }
     @Override
     public void runOpMode() throws InterruptedException {
@@ -128,11 +139,13 @@ public class Red_Near_Collect_Launch_Auto extends LinearOpMode {
         // Enable Conveyor
         Conveyor.setVelocity(500);
 
-        sleep(1000);
+        sleep(3000);
 
         Conveyor.setVelocity(0);
+        LeftLaunch.setVelocity(0);
+        RightLaunch.setVelocity(0);
 
-        sleep(5000);
+        sleep(100);
 
         int turnTime = 1500;
 
@@ -168,7 +181,7 @@ public class Red_Near_Collect_Launch_Auto extends LinearOpMode {
         Conveyor.setVelocity(500);
 
         // Out of zone
-        sleep(2000);
+        sleep(3000);
         Conveyor.setVelocity(0);
         Macanum(-1.0,0.0,0.0,2000);
         sleep(700);
