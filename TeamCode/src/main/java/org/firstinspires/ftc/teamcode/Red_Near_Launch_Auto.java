@@ -31,6 +31,8 @@ public class Red_Near_Launch_Auto extends LinearOpMode {
             }
         }
         if (targetBlock != null) {
+            double distance = 8.25 / targetBlock.height; // Formula for distance in inches
+            telemetry.addData("Distance", distance);
             telemetry.addData("ID", targetBlock.id);
         }
         return targetBlock; // Returns The AprilTag Block
@@ -38,17 +40,26 @@ public class Red_Near_Launch_Auto extends LinearOpMode {
     public static double clamp(double value, double min, double max) {
         return Math.max(min, Math.min(max, value));
     }
-    public void aim_bot(){
+    public void aim_bot(int max_rounds){
         HuskyLens.Block block = getTag();
         if (block != null && block.id == 5){
-            telemetry.addData("data",Math.abs(getTag().x - 160));
-            telemetry.update();
-            while (Math.abs(getTag().x - 160) > 5 && opModeIsActive()){
-                telemetry.addData("data",Math.abs(getTag().x - 160));
-                telemetry.update();
-                Macanum(0.0,0.0,clamp(getTag().x - 160,-0.5,0.5),100);
+            double screen_middle_x;
+            int rounds = 0;
+            while (opModeIsActive()){
+                sleep(100);
+                block = getTag();
+                rounds += 1;
+                if (block == null){
+                    break;
+                }
+                screen_middle_x = block.x - 160;
+                if (rounds >= max_rounds){
+                    break;
+                }
+                Macanum(0.0,0.0,-clamp(screen_middle_x,-1.0,1.0),50); // clamp
             }
         }
+        Macanum(0.0,0.0,0.0,0);
     }
 
     public void Macanum(Double x,Double y,Double r,Integer Speed) {
@@ -96,27 +107,32 @@ public class Red_Near_Launch_Auto extends LinearOpMode {
         waitForStart();
 
         // Sequence
+        // head back to have space to launch
+        Intake.setVelocity(3000);
         Macanum(0.0,-1.0,0.0,2000);
-        sleep(1000);
-        Macanum(0.0,0.0,0.0,0);
+        sleep(1300);
 
-        LeftLaunch.setVelocity(2300);
-        RightLaunch.setVelocity(2300);
+        // Aim-bot
+        aim_bot(20);
 
-        // aim-bot
-        aim_bot();
+        int launcherVelocity = 2500;
 
-        //
-        while (RightLaunch.getVelocity() != 2300 || LeftLaunch.getVelocity() != 2300 && opModeIsActive()){
+        LeftLaunch.setVelocity(launcherVelocity);
+        RightLaunch.setVelocity(launcherVelocity);
+
+        // Wait for Velocity
+        while (RightLaunch.getVelocity() != launcherVelocity || LeftLaunch.getVelocity() != launcherVelocity && opModeIsActive()){
             sleep(100);
         }
-
-        Conveyor.setVelocity(500);
-
-        // Out of zone
-        sleep(5000);
-        Macanum(1.0,0.0,0.0,2000);
         sleep(1000);
+
+        // Enable Conveyor
+        Conveyor.setVelocity(3000);
+
+        sleep(3000);
+        // Out of zone
+        Macanum(-1.0,0.0,0.0,2000);
+        sleep(700);
         Macanum(0.0,0.0,0.0,0);
         // no telemetry :o
     }

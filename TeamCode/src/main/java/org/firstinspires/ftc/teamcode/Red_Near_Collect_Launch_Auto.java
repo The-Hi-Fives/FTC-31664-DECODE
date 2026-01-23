@@ -48,6 +48,8 @@ public class Red_Near_Collect_Launch_Auto extends LinearOpMode {
             }
         }
         if (targetBlock != null) {
+            double distance = 8.25 / targetBlock.height; // Formula for distance in inches
+            telemetry.addData("Distance", distance);
             telemetry.addData("ID", targetBlock.id);
         }
         return targetBlock; // Returns The AprilTag Block
@@ -55,28 +57,55 @@ public class Red_Near_Collect_Launch_Auto extends LinearOpMode {
     public static double clamp(double value, double min, double max) {
         return Math.max(min, Math.min(max, value));
     }
-    public void aim_bot(){
+    public void aim_bot(int max_rounds){
         HuskyLens.Block block = getTag();
         if (block != null && block.id == 5){
             double screen_middle_x;
+            int rounds = 0;
+            while (opModeIsActive()){
+                sleep(100);
+                block = getTag();
+                rounds += 1;
+                if (block == null){
+                    break;
+                }
+                screen_middle_x = block.x - 160;
+                if (rounds >= max_rounds){
+                    break;
+                }
+                Macanum(0.0,0.0,-clamp(screen_middle_x,-1.0,1.0),50); // clamp
+            }
+        }
+        Macanum(0.0,0.0,0.0,0);
+    }
+    public void yaw_bot(){
+        HuskyLens.Block block = getTag();
+        if (block != null && block.id == 5){
+            double screen_middle_x;
+            int max_fails = 30;
             int fails = 0;
             while (opModeIsActive()){
                 block = getTag();
-                screen_middle_x = block.x - 160;
                 if (block == null){
                     fails += 1;
                     continue;
                 } else {
                     fails = 0;
                 }
-                if (fails >= 30){
+                screen_middle_x = block.x - 160;
+                if (fails >= max_fails){
                     break;
                 }
-                if (!(5.0 < Math.abs(screen_middle_x))){
+                if (!(5.0 < Math.abs(screen_middle_x)) && !(block.width < block.height * 0.7)){
                     break;
                 }
-                screen_middle_x = (double) block.x - 160;
-                Macanum(0.0,0.0,-clamp(screen_middle_x,-1.0,1.0),50); // clamp
+                if (block.width < block.height * 0.7) {
+                    double clampedValue = clamp(screen_middle_x, -1.0, 1.0);
+                    Macanum(-clampedValue, 0.0, -clampedValue, 50);
+                } else {
+                    // Move normally
+                    Macanum(0.0, 0.0, -clamp(screen_middle_x, -1.0, 1.0), 50);
+                }
             }
         }
         Macanum(0.0,0.0,0.0,0);
@@ -118,12 +147,12 @@ public class Red_Near_Collect_Launch_Auto extends LinearOpMode {
 
         // Sequence
         // head back to have space to launch
-        Intake.setVelocity(1872);
+        Intake.setVelocity(3000);
         Macanum(0.0,-1.0,0.0,2000);
-        sleep(1300);
+        sleep(1200);
 
         // Aim-bot
-        aim_bot();
+        aim_bot(20);
 
         int launcherVelocity = 2500;
 
@@ -137,7 +166,7 @@ public class Red_Near_Collect_Launch_Auto extends LinearOpMode {
         sleep(1000);
 
         // Enable Conveyor
-        Conveyor.setVelocity(500);
+        Conveyor.setVelocity(3000);
 
         sleep(3000);
 
@@ -147,13 +176,13 @@ public class Red_Near_Collect_Launch_Auto extends LinearOpMode {
 
         sleep(100);
 
-        int turnTime = 1500;
+        int turnTime = 1600;
 
         // Turn Robot 135 degrees
         Macanum(0.0,0.0,1.0,900);
         sleep(turnTime);
 
-        int intakeTime = 4000;
+        int intakeTime = 4300;
 
         // Move backwards and intake
         Macanum(0.0,-1.0,0.0,500);
@@ -166,7 +195,7 @@ public class Red_Near_Collect_Launch_Auto extends LinearOpMode {
         sleep(turnTime); // however long it takes
 
         // Aim-bot
-        aim_bot();
+        aim_bot(20);
 
         // start Launch Motors
         LeftLaunch.setVelocity(launcherVelocity);
@@ -176,9 +205,10 @@ public class Red_Near_Collect_Launch_Auto extends LinearOpMode {
         while (RightLaunch.getVelocity() != launcherVelocity || LeftLaunch.getVelocity() != launcherVelocity && opModeIsActive()){
             sleep(100);
         }
+
         sleep(1000);
         // Enable Conveyor
-        Conveyor.setVelocity(500);
+        Conveyor.setVelocity(3000);
 
         // Out of zone
         sleep(3000);

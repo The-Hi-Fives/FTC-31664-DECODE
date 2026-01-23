@@ -5,20 +5,17 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.hardware.Servo;
-
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 import java.util.Arrays;
 import java.util.List;
 
 @Disabled
 @TeleOp(name="Macanum Odometry TeleOp", group="TeleOp")
-public class Macanum_Odometry_TeleOp extends OpMode {
+public class Macanum_Odometry_TeleOp_depreciated extends OpMode {
     DcMotorEx FrontRightMotor, BackRightMotor, FrontLeftMotor, BackLeftMotor, Intake, LeftLaunch, RightLaunch;
     CRServo leftPulley, rightPulley, backLeftConveyor, backRightConveyor, frontLeftConveyor, frontRightConveyor;
     HuskyLens Camera;

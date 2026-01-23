@@ -67,6 +67,8 @@ public class Macanum_Default_TeleOp extends OpMode {
 
     public void Telemetry() {
         telemetry.addData("Aiming ::", aiming);
+        telemetry.addData("Conveyor Velocity ::", Conveyor.getVelocity());
+        telemetry.addData("Intake Velocity ::", Intake.getVelocity());
         telemetry.addLine("==== Controls ====");
         telemetry.addLine("Game Pad 1: (Driver) ==");
         telemetry.addLine("Left Stick: Macanum Drive");
@@ -86,11 +88,6 @@ public class Macanum_Default_TeleOp extends OpMode {
     public void IntakeOuttake() {
         // No Pulley? :\
         // Intake/Outtake
-        if (gamepad2.a) {
-            // Outtake
-            Conveyor.setVelocity(-500);
-            Intake.setVelocity(-1872);
-        }
         // Manual Conveyor Input
         if (gamepad2.dpad_down) {
             Conveyor.setVelocity(-250);
@@ -101,7 +98,7 @@ public class Macanum_Default_TeleOp extends OpMode {
         }
         // Intake
         if (gamepad2.right_bumper || gamepad1.right_bumper) {
-            Intake.setVelocity(1872);
+            Intake.setVelocity(4000);
         } else {
             Intake.setVelocity(0);
         }
@@ -110,7 +107,7 @@ public class Macanum_Default_TeleOp extends OpMode {
         if (gamepad2.b) {
             velocity = 2500;
         } else if (gamepad2.y) {
-            velocity = 2350;
+            velocity = 2500;
         } else {
             velocity = 0;
         }
@@ -121,12 +118,17 @@ public class Macanum_Default_TeleOp extends OpMode {
         if (gamepad2.right_trigger >= 0.5) {
             Conveyor.setVelocity(400);
         } else if (velocity != 0 && RightLaunch.getVelocity() > velocity-50 && LeftLaunch.getVelocity() > velocity-50) {
-            Conveyor.setVelocity(600);
+            Conveyor.setVelocity(3000);
         } else {
             Conveyor.setPower(0);
         }
         RightLaunch.setVelocity(velocity);
         LeftLaunch.setVelocity(velocity);
+        if (gamepad2.a) {
+            // Outtake
+            Conveyor.setVelocity(-500);
+            Intake.setVelocity(-4000);
+        }
     }
     public void MacanumDrive(double x, double y, double r, double ad) {
         r += ad;
