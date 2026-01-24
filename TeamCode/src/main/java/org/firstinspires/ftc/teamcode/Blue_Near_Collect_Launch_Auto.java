@@ -60,24 +60,22 @@ public class Blue_Near_Collect_Launch_Auto extends LinearOpMode {
     public static double clamp(double value, double min, double max) {
         return Math.max(min, Math.min(max, value));
     }
-    public void aim_bot(int max_rounds){
+    public void aim_bot(int max_rounds) {
         HuskyLens.Block block = getTag();
-        if (block != null && block.id == 5){
-            double screen_middle_x;
-            int rounds = 0;
-            while (opModeIsActive()){
-                sleep(100);
-                block = getTag();
-                rounds += 1;
-                if (block == null){
-                    break;
-                }
-                screen_middle_x = block.x - 160;
-                if (rounds >= max_rounds){
-                    break;
-                }
-                Macanum(0.0,0.0,-clamp(screen_middle_x,-1.0,1.0),50); // clamp
+        double screen_middle_x;
+        int rounds = 0;
+        while (opModeIsActive()) {
+            sleep(10);
+            block = getTag();
+            rounds += 1;
+            if (block == null && block.id == 1) {
+                continue;
             }
+            screen_middle_x = block.x - 160;
+            if (rounds >= max_rounds) {
+                break;
+            }
+            Macanum(0.0, 0.0, -clamp(screen_middle_x, -1.0, 1.0), 100); // clamp
         }
         Macanum(0.0,0.0,0.0,0);
     }
@@ -155,7 +153,7 @@ public class Blue_Near_Collect_Launch_Auto extends LinearOpMode {
         sleep(1200);
 
         // Aim-bot
-        aim_bot(20);
+        aim_bot(400);
 
         int launcherVelocity = 2500;
 
@@ -198,7 +196,7 @@ public class Blue_Near_Collect_Launch_Auto extends LinearOpMode {
         sleep(turnTime); // however long it takes
 
         // Aim-bot
-        aim_bot(20);
+        aim_bot(400);
 
         // start Launch Motors
         LeftLaunch.setVelocity(launcherVelocity);
