@@ -58,7 +58,7 @@ public class Red_Near_Collect_Launch_Auto extends LinearOpMode {
         return Math.max(min, Math.min(max, value));
     }
     public void aim_bot(int max_rounds) {
-        // if I wrote a book on how many times I changed this code, the page count would rival the Bible.
+        // If I wrote a book on how many times I had to change this code, then it's page count would rival the Bible's.
         HuskyLens.Block block = getTag();
         double screen_middle_x;
         int rounds = 0;
@@ -66,46 +66,19 @@ public class Red_Near_Collect_Launch_Auto extends LinearOpMode {
             sleep(10);
             block = getTag();
             rounds += 1;
-            if (block == null && block.id == 5) {
+            if (block == null) {
+                Macanum(0.0,0.0,0.0,0);
+                continue;
+            }
+            if (block.id != 5) {
+                Macanum(0.0,0.0,0.0,0);
                 continue;
             }
             screen_middle_x = block.x - 160;
             if (rounds >= max_rounds) {
                 break;
             }
-            Macanum(0.0, 0.0, -clamp(screen_middle_x, -1.0, 1.0), 100); // clamp
-        }
-        Macanum(0.0,0.0,0.0,0);
-    }
-    public void yaw_bot(){
-        HuskyLens.Block block = getTag();
-        if (block != null && block.id == 5){
-            double screen_middle_x;
-            int max_fails = 30;
-            int fails = 0;
-            while (opModeIsActive()){
-                block = getTag();
-                if (block == null){
-                    fails += 1;
-                    continue;
-                } else {
-                    fails = 0;
-                }
-                screen_middle_x = block.x - 160;
-                if (fails >= max_fails){
-                    break;
-                }
-                if (!(5.0 < Math.abs(screen_middle_x)) && !(block.width < block.height * 0.7)){
-                    break;
-                }
-                if (block.width < block.height * 0.7) {
-                    double clampedValue = clamp(screen_middle_x, -1.0, 1.0);
-                    Macanum(-clampedValue, 0.0, -clampedValue, 50);
-                } else {
-                    // Move normally
-                    Macanum(0.0, 0.0, -clamp(screen_middle_x, -1.0, 1.0), 50);
-                }
-            }
+            Macanum(0.0, 0.0, clamp(screen_middle_x, -1.0, 1.0), 100); // clamp
         }
         Macanum(0.0,0.0,0.0,0);
     }
@@ -148,10 +121,10 @@ public class Red_Near_Collect_Launch_Auto extends LinearOpMode {
         // head back to have space to launch
         Intake.setVelocity(3000);
         Macanum(0.0,-1.0,0.0,2000);
-        sleep(1200);
+        sleep(1400);
 
         // Aim-bot
-        aim_bot(20);
+        aim_bot(100);
 
         int launcherVelocity = 2500;
 
@@ -160,7 +133,7 @@ public class Red_Near_Collect_Launch_Auto extends LinearOpMode {
 
         // Wait for Velocity
         while (RightLaunch.getVelocity() != launcherVelocity || LeftLaunch.getVelocity() != launcherVelocity && opModeIsActive()){
-            sleep(100);
+            sleep(10);
         }
         sleep(1000);
 
@@ -173,15 +146,20 @@ public class Red_Near_Collect_Launch_Auto extends LinearOpMode {
         LeftLaunch.setVelocity(0);
         RightLaunch.setVelocity(0);
 
-        sleep(100);
+        sleep(20);
 
-        int turnTime = 1600;
+        int turnTime = 1500;
+
+        // move a little forward
+        Macanum(0.0,1.0,0.0,2000);
+        sleep(200);
+
 
         // Turn Robot 135 degrees
         Macanum(0.0,0.0,1.0,900);
         sleep(turnTime);
 
-        int intakeTime = 4300;
+        int intakeTime = 4100;
 
         // Move backwards and intake
         Macanum(0.0,-1.0,0.0,500);
@@ -193,8 +171,12 @@ public class Red_Near_Collect_Launch_Auto extends LinearOpMode {
         Macanum(0.0,0.0,-1.0,900);
         sleep(turnTime); // however long it takes
 
+        // move a little backward
+        Macanum(0.0,-1.0,0.0,2000);
+        sleep(200);
+
         // Aim-bot
-        aim_bot(20);
+        aim_bot(100);
 
         // start Launch Motors
         LeftLaunch.setVelocity(launcherVelocity);
@@ -202,9 +184,8 @@ public class Red_Near_Collect_Launch_Auto extends LinearOpMode {
 
         // Wait for Velocity
         while (RightLaunch.getVelocity() != launcherVelocity || LeftLaunch.getVelocity() != launcherVelocity && opModeIsActive()){
-            sleep(100);
+            sleep(10);
         }
-
         sleep(1000);
         // Enable Conveyor
         Conveyor.setVelocity(3000);

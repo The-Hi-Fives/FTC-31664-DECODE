@@ -58,7 +58,7 @@ public class Universal_far_Launch_Auto extends LinearOpMode {
         RightLaunch.setVelocity(2500);
 
         while (RightLaunch.getVelocity() != 2500 || LeftLaunch.getVelocity() != 2500){
-            sleep(100);
+            sleep(10);
         }
         sleep(1000);
 

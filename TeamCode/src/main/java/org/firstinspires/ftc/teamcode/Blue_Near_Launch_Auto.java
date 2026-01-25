@@ -41,6 +41,7 @@ public class Blue_Near_Launch_Auto extends LinearOpMode {
         return Math.max(min, Math.min(max, value));
     }
     public void aim_bot(int max_rounds) {
+        // If I wrote a book on how many times I had to change this code, then it's page count would rival the Bible's.
         HuskyLens.Block block = getTag();
         double screen_middle_x;
         int rounds = 0;
@@ -48,18 +49,22 @@ public class Blue_Near_Launch_Auto extends LinearOpMode {
             sleep(10);
             block = getTag();
             rounds += 1;
-            if (block == null && block.id == 1) {
+            if (block == null) {
+                Macanum(0.0,0.0,0.0,0);
+                continue;
+            }
+            if (block.id != 1) {
+                Macanum(0.0,0.0,0.0,0);
                 continue;
             }
             screen_middle_x = block.x - 160;
             if (rounds >= max_rounds) {
                 break;
             }
-            Macanum(0.0, 0.0, -clamp(screen_middle_x, -1.0, 1.0), 100); // clamp
+            Macanum(0.0, 0.0, clamp(screen_middle_x, -1.0, 1.0), 100); // clamp
         }
         Macanum(0.0,0.0,0.0,0);
     }
-
     public void Macanum(Double x,Double y,Double r,Integer Speed) {
         double d = Math.max(Math.abs(x)+Math.abs(y)+Math.abs(r),1);
 
@@ -111,7 +116,7 @@ public class Blue_Near_Launch_Auto extends LinearOpMode {
         sleep(1300);
 
         // Aim-bot
-        aim_bot(20);
+        aim_bot(100);
 
         int launcherVelocity = 2500;
 
