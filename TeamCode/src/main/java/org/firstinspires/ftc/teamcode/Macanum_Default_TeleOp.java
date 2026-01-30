@@ -40,6 +40,7 @@ public class Macanum_Default_TeleOp extends OpMode {
         BackLeftMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         LeftLaunch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         RightLaunch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        Conveyor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         FrontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         BackRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -180,13 +181,14 @@ public class Macanum_Default_TeleOp extends OpMode {
             double screen_middle_x = (double) block.x - 160; // 160 being half of 320, the x screen resolution
             if (20 < Math.abs(screen_middle_x)) { // Check if it's in a certain threshold (i.e. more than 10)
                 ad = clamp(screen_middle_x,-1.0,1.0); // Makes sure the ad is between -1.0 and 1.0
+
                 //AlternatePos = normalize((block.width * block.height)/1000,PulleyMin,PulleyMax) * 120;
                 //AlternateVelocity = normalize((block.width * block.height)/1000,0,2000) * 2000;
             }
         }
 
-        MacanumDrive(x,y,r,ad/5);
-        IntakeOuttake();
+        MacanumDrive(x,y,r,ad/5); // macanum drive
+        IntakeOuttake(); // intake/outtake
         Telemetry(); // telemetry
     }
 }

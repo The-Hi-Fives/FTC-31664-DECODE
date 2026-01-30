@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -7,10 +8,13 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Autonomous(name="Universal Far Launch Auto", group="Default")
 public class Universal_far_Launch_Auto extends LinearOpMode {
-    DcMotorEx FrontRightMotor, BackRightMotor, FrontLeftMotor, BackLeftMotor, Intake, LeftLaunch, RightLaunch;
-    DcMotorEx Conveyor;
+    DcMotorEx FrontRightMotor, BackRightMotor, FrontLeftMotor, BackLeftMotor, Intake, LeftLaunch, RightLaunch, Conveyor;
+    HuskyLens Camera;
 
     public void Macanum(Double x,Double y,Double r,Integer Speed) {
         double d = Math.max(Math.abs(x)+Math.abs(y)+Math.abs(r),1);
@@ -25,8 +29,60 @@ public class Universal_far_Launch_Auto extends LinearOpMode {
         FrontRightMotor.setVelocity(FRVelocity);
         BackRightMotor.setVelocity(BRVelocity);
     }
+    public HuskyLens.Block getTag() {
+        List<HuskyLens.Block> blocks = Arrays.asList(Camera.blocks());
+        HuskyLens.Block targetBlock = null;
+        for (HuskyLens.Block block : blocks) {
+            if (block.id != 0) {
+                if (targetBlock != null) {
+                    if (block.width * block.height > targetBlock.width * targetBlock.height) { // Checks which AprilTag is the largest on the screen.
+                        targetBlock = block; // Sets block as currentBlock
+                    }
+                } else { // If not currentBlock then set block as currentBlock.
+                    targetBlock = block;
+                }
+            }
+        }
+        if (targetBlock != null) {
+            double distance = 8.25 / targetBlock.height; // Formula for distance in inches
+            telemetry.addData("Distance", distance);
+            telemetry.addData("ID", targetBlock.id);
+        }
+        return targetBlock; // Returns The AprilTag Block
+    }
+    public void aim_bot(int max_rounds) {
+        // If I wrote a book on how many times I had to change this code, then it's page count would rival the Bible's.
+        HuskyLens.Block block = getTag();
+        double screen_middle_x;
+        int rounds = 0;
+        while (opModeIsActive()) {
+            sleep(50);
+            block = getTag();
+            rounds += 1;
+            if (block == null) {
+                Macanum(0.0,0.0,0.0,0);
+                continue;
+            }
+            if (block.id != 5 && block.id != 1) {
+                Macanum(0.0,0.0,0.0,0);
+                continue;
+            }
+            screen_middle_x = block.x - 160;
+            if (rounds >= max_rounds) {
+                break;
+            }
+            Macanum(0.0, 0.0, clamp(screen_middle_x, -1.0, 1.0), 100); // clamp
+        }
+        Macanum(0.0,0.0,0.0,0);
+    }
+    public static double clamp(double value, double min, double max) {
+        return Math.max(min, Math.min(max, value));
+    }
     @Override
     public void runOpMode() throws InterruptedException {
+        Camera = hardwareMap.get(HuskyLens.class,"HuskyLens");
+        Camera.selectAlgorithm(HuskyLens.Algorithm.TAG_RECOGNITION);
+
         FrontLeftMotor = hardwareMap.get(DcMotorEx.class,"frontLeft");
         BackLeftMotor = hardwareMap.get(DcMotorEx.class,"backLeft");
         FrontRightMotor = hardwareMap.get(DcMotorEx.class,"frontRight");
@@ -44,6 +100,7 @@ public class Universal_far_Launch_Auto extends LinearOpMode {
         BackLeftMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         LeftLaunch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         RightLaunch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        Conveyor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         FrontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         BackRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -54,11 +111,13 @@ public class Universal_far_Launch_Auto extends LinearOpMode {
         // Sequence
         Macanum(0.0,0.0,0.0,0);
 
+        aim_bot(20);
+
         LeftLaunch.setVelocity(2500);
         RightLaunch.setVelocity(2500);
 
         while (RightLaunch.getVelocity() != 2500 || LeftLaunch.getVelocity() != 2500){
-            sleep(10);
+            sleep(50);
         }
         sleep(1000);
 

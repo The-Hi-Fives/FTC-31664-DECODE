@@ -46,7 +46,7 @@ public class Red_Near_Launch_Auto extends LinearOpMode {
         double screen_middle_x;
         int rounds = 0;
         while (opModeIsActive()) {
-            sleep(10);
+            sleep(50);
             block = getTag();
             rounds += 1;
             if (block == null) {
@@ -102,6 +102,7 @@ public class Red_Near_Launch_Auto extends LinearOpMode {
         BackLeftMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         LeftLaunch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         RightLaunch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        Conveyor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         FrontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         BackRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -125,7 +126,7 @@ public class Red_Near_Launch_Auto extends LinearOpMode {
 
         // Wait for Velocity
         while (RightLaunch.getVelocity() != launcherVelocity || LeftLaunch.getVelocity() != launcherVelocity && opModeIsActive()){
-            sleep(100);
+            sleep(50);
         }
         sleep(1000);
 

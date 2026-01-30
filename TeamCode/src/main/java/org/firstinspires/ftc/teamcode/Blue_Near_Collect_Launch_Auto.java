@@ -3,15 +3,12 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import java.util.Arrays;
 import java.util.List;
-
-import javax.crypto.Mac;
 
 @Autonomous(name="Blue Near Collect Launch Auto", group="Default")
 public class Blue_Near_Collect_Launch_Auto extends LinearOpMode {
@@ -66,7 +63,7 @@ public class Blue_Near_Collect_Launch_Auto extends LinearOpMode {
         double screen_middle_x;
         int rounds = 0;
         while (opModeIsActive()) {
-            sleep(10);
+            sleep(50);
             block = getTag();
             rounds += 1;
             if (block == null) {
@@ -108,6 +105,7 @@ public class Blue_Near_Collect_Launch_Auto extends LinearOpMode {
         BackLeftMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         LeftLaunch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         RightLaunch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        Conveyor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         FrontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         BackRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -127,7 +125,7 @@ public class Blue_Near_Collect_Launch_Auto extends LinearOpMode {
         sleep(1400);
 
         // Aim-bot
-        aim_bot(100);
+        aim_bot(20);
 
         int launcherVelocity = 2500;
 
@@ -136,7 +134,7 @@ public class Blue_Near_Collect_Launch_Auto extends LinearOpMode {
 
         // Wait for Velocity
         while (RightLaunch.getVelocity() != launcherVelocity || LeftLaunch.getVelocity() != launcherVelocity && opModeIsActive()){
-            sleep(10);
+            sleep(50);
         }
         sleep(1000);
 
@@ -179,7 +177,7 @@ public class Blue_Near_Collect_Launch_Auto extends LinearOpMode {
         sleep(200);
 
         // Aim-bot
-        aim_bot(100);
+        aim_bot(20);
 
         // start Launch Motors
         LeftLaunch.setVelocity(launcherVelocity);
@@ -187,7 +185,7 @@ public class Blue_Near_Collect_Launch_Auto extends LinearOpMode {
 
         // Wait for Velocity
         while (RightLaunch.getVelocity() != launcherVelocity || LeftLaunch.getVelocity() != launcherVelocity && opModeIsActive()){
-            sleep(10);
+            sleep(50);
         }
         sleep(1000);
         // Enable Conveyor

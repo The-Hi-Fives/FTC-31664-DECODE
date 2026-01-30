@@ -40,13 +40,13 @@ public class Blue_Near_Launch_Auto extends LinearOpMode {
     public static double clamp(double value, double min, double max) {
         return Math.max(min, Math.min(max, value));
     }
-    public void aim_bot(int max_rounds) {
+    public void aim_bot(int max_rounds) { // 1 round is 50 milliseconds
         // If I wrote a book on how many times I had to change this code, then it's page count would rival the Bible's.
         HuskyLens.Block block = getTag();
         double screen_middle_x;
         int rounds = 0;
         while (opModeIsActive()) {
-            sleep(10);
+            sleep(50);
             block = getTag();
             rounds += 1;
             if (block == null) {
@@ -102,6 +102,7 @@ public class Blue_Near_Launch_Auto extends LinearOpMode {
         BackLeftMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         LeftLaunch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         RightLaunch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        Conveyor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         FrontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         BackRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -116,7 +117,7 @@ public class Blue_Near_Launch_Auto extends LinearOpMode {
         sleep(1300);
 
         // Aim-bot
-        aim_bot(100);
+        aim_bot(20);
 
         int launcherVelocity = 2500;
 
@@ -125,7 +126,7 @@ public class Blue_Near_Launch_Auto extends LinearOpMode {
 
         // Wait for Velocity
         while (RightLaunch.getVelocity() != launcherVelocity || LeftLaunch.getVelocity() != launcherVelocity && opModeIsActive()){
-            sleep(100);
+            sleep(50);
         }
         sleep(1000);
 
