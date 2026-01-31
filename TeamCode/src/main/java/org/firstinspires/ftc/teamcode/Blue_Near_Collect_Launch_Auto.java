@@ -135,13 +135,25 @@ public class Blue_Near_Collect_Launch_Auto extends LinearOpMode {
         // Wait for Velocity
         while (RightLaunch.getVelocity() != launcherVelocity || LeftLaunch.getVelocity() != launcherVelocity && opModeIsActive()){
             sleep(50);
+            telemetry.addData("Launch velocity",RightLaunch.getVelocity());
+            telemetry.addData("Launch velocity",LeftLaunch.getVelocity());
+            telemetry.update();
         }
         sleep(1000);
 
         // Enable Conveyor
         Conveyor.setVelocity(3000);
 
-        sleep(3000);
+        int rounds = 0;
+        int max_rounds = 60;
+
+        while (rounds <= max_rounds){
+            sleep(50);
+            rounds += 1;
+            telemetry.addData("Launch velocity",RightLaunch.getVelocity());
+            telemetry.addData("Launch velocity",LeftLaunch.getVelocity());
+            telemetry.update();
+        }
 
         Conveyor.setVelocity(0);
         LeftLaunch.setVelocity(0);
@@ -191,8 +203,18 @@ public class Blue_Near_Collect_Launch_Auto extends LinearOpMode {
         // Enable Conveyor
         Conveyor.setVelocity(3000);
 
+        rounds = 0;
+        max_rounds = 60;
+
+        while (rounds <= max_rounds){
+            sleep(50);
+            rounds += 1;
+            telemetry.addData("Launch velocity",RightLaunch.getVelocity());
+            telemetry.addData("Launch velocity",LeftLaunch.getVelocity());
+            telemetry.update();
+        }
+
         // Out of zone
-        sleep(3000);
         Conveyor.setVelocity(0);
         Macanum(1.0,0.0,0.0,2000);
         sleep(700);

@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import java.util.Arrays;
 import java.util.List;
@@ -15,11 +16,15 @@ public class Macanum_Default_TeleOp extends OpMode {
     DcMotorEx FrontRightMotor, BackRightMotor, FrontLeftMotor, BackLeftMotor, Intake, LeftLaunch, RightLaunch;
     DcMotorEx Conveyor;
     HuskyLens Camera;
+    Servo LED;
     boolean aiming = false;
     boolean debounce = false;
     @Override
     public void init() {
         // 175.0?
+        LED = hardwareMap.get(Servo.class,"LED");
+
+        LED.setPosition(0.277);
 
         Camera = hardwareMap.get(HuskyLens.class,"HuskyLens");
         Camera.selectAlgorithm(HuskyLens.Algorithm.TAG_RECOGNITION);
