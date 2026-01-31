@@ -16,7 +16,7 @@ public class Universal_far_move_Auto extends LinearOpMode {
     HuskyLens Camera;
 
     public void Macanum(Double x,Double y,Double r,Integer Speed) {
-        double d = Math.max(Math.abs(x)+Math.abs(y)+Math.abs(r),1);
+        double d = Math.max(Math.abs(x)+Math.abs(y)+Math.abs(r),1); // add all values
 
         double FTVelocity = (x + y + r)/d * Speed; // Don't touch or it
         double BTVelocity = (x - y + r)/d * Speed; // may NEVER work again...
