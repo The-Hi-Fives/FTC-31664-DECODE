@@ -10,10 +10,11 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import java.util.Arrays;
 import java.util.List;
 
-@Autonomous(name="Red Near Collect Launch Auto", group="Default")
-public class Red_Near_Collect_Launch_Auto extends LinearOpMode {
+@Autonomous(name="Blue Near Double Collect Launch Auto", group="Default")
+public class Blue_Near_Double_Collect_Launch_Auto extends LinearOpMode {
     DcMotorEx FrontRightMotor, BackRightMotor, FrontLeftMotor, BackLeftMotor, Intake, LeftLaunch, RightLaunch, Conveyor;
     HuskyLens Camera;
+    int launcherVelocity = 2500;
 
     public void Macanum(Double x,Double y,Double r,Integer Speed) {
         double d = Math.max(Math.abs(x)+Math.abs(y)+Math.abs(r),1);
@@ -70,7 +71,7 @@ public class Red_Near_Collect_Launch_Auto extends LinearOpMode {
                 Macanum(0.0,0.0,0.0,0);
                 continue;
             }
-            if (block.id != 5) {
+            if (block.id != 1) {
                 Macanum(0.0,0.0,0.0,0);
                 continue;
             }
@@ -81,6 +82,39 @@ public class Red_Near_Collect_Launch_Auto extends LinearOpMode {
             Macanum(0.0, 0.0, clamp(screen_middle_x, -1.0, 1.0), 100); // clamp
         }
         Macanum(0.0,0.0,0.0,0);
+    }
+    public void Launch_sequence(){
+        aim_bot(20);
+
+        LeftLaunch.setVelocity(launcherVelocity);
+        RightLaunch.setVelocity(launcherVelocity);
+
+        // Wait for Velocity
+        while (RightLaunch.getVelocity() != launcherVelocity || LeftLaunch.getVelocity() != launcherVelocity && opModeIsActive()){
+            sleep(50);
+            telemetry.addData("Launch velocity",RightLaunch.getVelocity());
+            telemetry.addData("Launch velocity",LeftLaunch.getVelocity());
+            telemetry.update();
+        }
+        sleep(1000);
+
+        // Enable Conveyor
+        Conveyor.setVelocity(500);
+
+        int rounds = 0;
+        int max_rounds = 60;
+
+        while (rounds <= max_rounds){
+            sleep(50);
+            rounds += 1;
+            telemetry.addData("Launch velocity",RightLaunch.getVelocity());
+            telemetry.addData("Launch velocity",LeftLaunch.getVelocity());
+            telemetry.update();
+        }
+
+        Conveyor.setVelocity(0);
+        LeftLaunch.setVelocity(0);
+        RightLaunch.setVelocity(0);
     }
     @Override
     public void runOpMode() throws InterruptedException {
@@ -124,28 +158,8 @@ public class Red_Near_Collect_Launch_Auto extends LinearOpMode {
         Macanum(0.0,-1.0,0.0,2000);
         sleep(1400);
 
-        // Aim-bot
-        aim_bot(20);
-
-        int launcherVelocity = 2500;
-
-        LeftLaunch.setVelocity(launcherVelocity);
-        RightLaunch.setVelocity(launcherVelocity);
-
-        // Wait for Velocity
-        while (RightLaunch.getVelocity() != launcherVelocity || LeftLaunch.getVelocity() != launcherVelocity && opModeIsActive()){
-            sleep(50);
-        }
-        sleep(1000);
-
-        // Enable Conveyor
-        Conveyor.setVelocity(500);
-
-        sleep(3000);
-
-        Conveyor.setVelocity(0);
-        LeftLaunch.setVelocity(0);
-        RightLaunch.setVelocity(0);
+        // Launch
+        Launch_sequence();
 
         sleep(20);
 
@@ -153,11 +167,11 @@ public class Red_Near_Collect_Launch_Auto extends LinearOpMode {
 
         // move a little forward
         Macanum(0.0,1.0,0.0,2000);
-        sleep(200);
+        sleep(150);
 
 
         // Turn Robot 135 degrees
-        Macanum(0.0,0.0,1.0,900);
+        Macanum(0.0,0.0,-1.0,900);
         sleep(turnTime);
 
         int intakeTime = 4100;
@@ -169,32 +183,52 @@ public class Red_Near_Collect_Launch_Auto extends LinearOpMode {
         sleep(intakeTime);
 
         // Move forward and Turn 135 degrees
-        Macanum(0.0,0.0,-1.0,900);
+        Macanum(0.0,0.0,1.0,900);
         sleep(turnTime); // however long it takes
 
         // move a little backward
         Macanum(0.0,-1.0,0.0,2000);
         sleep(200);
 
-        // Aim-bot
-        aim_bot(20);
+        // Launch
+        Launch_sequence();
 
-        // start Launch Motors
-        LeftLaunch.setVelocity(launcherVelocity);
-        RightLaunch.setVelocity(launcherVelocity);
+        // move diagonal
+        Macanum(1.0,-1.0,0.0,2000);
+        sleep(300);
 
-        // Wait for Velocity
-        while (RightLaunch.getVelocity() != launcherVelocity || LeftLaunch.getVelocity() != launcherVelocity && opModeIsActive()){
-            sleep(50);
-        }
-        sleep(1000);
-        // Enable Conveyor
-        Conveyor.setVelocity(500);
+        // Turn Robot 135 degrees
+        Macanum(0.0,0.0,-1.0,900);
+        sleep(turnTime);
+
+        // Move forward fast to save time
+        Macanum(0.0,-1.0,0.0,2000);
+        sleep(500);
+
+        intakeTime = 4100;
+
+        // Move backwards and intake
+        Macanum(0.0,-1.0,0.0,500);
+        sleep(intakeTime);
+
+        // Move back based on the intakeTime
+        Macanum(0.0,1.0,0.0,2000);
+        sleep(intakeTime/4 + 500);
+
+        // Turn Robot 135 degrees
+        Macanum(0.0,0.0,1.0,900);
+        sleep(turnTime);
+
+        // move diagonal
+        Macanum(1.0,-1.0,0.0,-2000);
+        sleep(300);
+
+        // Launch
+        Launch_sequence();
 
         // Out of zone
-        sleep(3000);
         Conveyor.setVelocity(0);
-        Macanum(-1.0,0.0,0.0,2000);
+        Macanum(1.0,0.0,0.0,2000);
         sleep(700);
         Macanum(0.0,0.0,0.0,0);
         // no telemetry :P

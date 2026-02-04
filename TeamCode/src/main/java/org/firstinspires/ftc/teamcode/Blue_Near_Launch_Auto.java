@@ -131,7 +131,7 @@ public class Blue_Near_Launch_Auto extends LinearOpMode {
         sleep(1000);
 
         // Enable Conveyor
-        Conveyor.setVelocity(3000);
+        Conveyor.setVelocity(500);
 
         sleep(3000);
         // Out of zone
