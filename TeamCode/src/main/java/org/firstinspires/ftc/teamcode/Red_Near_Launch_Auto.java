@@ -104,9 +104,11 @@ public class Red_Near_Launch_Auto extends LinearOpMode {
         RightLaunch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         Conveyor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+
         FrontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         BackRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         RightLaunch.setDirection(DcMotorSimple.Direction.REVERSE);
+        Conveyor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         waitForStart();
 
@@ -119,7 +121,7 @@ public class Red_Near_Launch_Auto extends LinearOpMode {
         // Aim-bot
         aim_bot(20);
 
-        int launcherVelocity = 2500;
+        int launcherVelocity = 2000;
 
         LeftLaunch.setVelocity(launcherVelocity);
         RightLaunch.setVelocity(launcherVelocity);
@@ -131,7 +133,7 @@ public class Red_Near_Launch_Auto extends LinearOpMode {
         sleep(1000);
 
         // Enable Conveyor
-        Conveyor.setVelocity(500);
+        Conveyor.setVelocity(3000);
 
         sleep(3000);
         // Out of zone

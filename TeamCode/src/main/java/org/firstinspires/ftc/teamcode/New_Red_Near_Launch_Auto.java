@@ -10,8 +10,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import java.util.Arrays;
 import java.util.List;
 
-@Autonomous(name="New Super Blue Near Launch Auto U", group="Default")
-public class New_Blue_Near_Launch_Auto extends LinearOpMode {
+@Autonomous(name="New Super Red Near Launch Auto U", group="Default")
+public class New_Red_Near_Launch_Auto extends LinearOpMode {
     DcMotorEx FrontRightMotor, BackRightMotor, FrontLeftMotor, BackLeftMotor, Intake, LeftLaunch, RightLaunch, Conveyor;
     HuskyLens Camera;
     public void setUp(){
@@ -68,7 +68,7 @@ public class New_Blue_Near_Launch_Auto extends LinearOpMode {
         launchArtifact(2000);
 
         // Get out of zone
-        Macanum(1.0, 0.0, 0.0, 2000);
+        Macanum(-1.0, 0.0, 0.0, 2000);
         sleep(500);
         Macanum(0.0, 0.0, 0.0, 0);
         // no telemetry :o

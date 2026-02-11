@@ -110,6 +110,7 @@ public class Blue_Near_Collect_Launch_Auto extends LinearOpMode {
         FrontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         BackRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         RightLaunch.setDirection(DcMotorSimple.Direction.REVERSE);
+        Conveyor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         FrontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         BackRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -127,7 +128,7 @@ public class Blue_Near_Collect_Launch_Auto extends LinearOpMode {
         // Aim-bot
         aim_bot(20);
 
-        int launcherVelocity = 2500;
+        int launcherVelocity = 2000;
 
         LeftLaunch.setVelocity(launcherVelocity);
         RightLaunch.setVelocity(launcherVelocity);
@@ -201,7 +202,7 @@ public class Blue_Near_Collect_Launch_Auto extends LinearOpMode {
         }
         sleep(1000);
         // Enable Conveyor
-        Conveyor.setVelocity(500);
+        Conveyor.setVelocity(3000);
 
         rounds = 0;
         max_rounds = 60;

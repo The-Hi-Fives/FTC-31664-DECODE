@@ -22,9 +22,9 @@ public class Macanum_Default_TeleOp extends OpMode {
     @Override
     public void init() {
         // 175.0?
-        LED = hardwareMap.get(Servo.class,"LED");
+        //LED = hardwareMap.get(Servo.class,"LED");
 
-        LED.setPosition(0.277);
+        //LED.setPosition(0.277);
 
         Camera = hardwareMap.get(HuskyLens.class,"HuskyLens");
         Camera.selectAlgorithm(HuskyLens.Algorithm.TAG_RECOGNITION);
@@ -50,6 +50,7 @@ public class Macanum_Default_TeleOp extends OpMode {
         FrontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         BackRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         RightLaunch.setDirection(DcMotorSimple.Direction.REVERSE);
+        Conveyor.setDirection(DcMotorSimple.Direction.REVERSE);
     }
     public HuskyLens.Block getTag() {
         List<HuskyLens.Block> blocks = Arrays.asList(Camera.blocks());
@@ -104,16 +105,16 @@ public class Macanum_Default_TeleOp extends OpMode {
         }
         // Intake
         if (gamepad2.right_bumper || gamepad1.right_bumper) {
-            Intake.setVelocity(4000);
+            Intake.setVelocity(2000);
         } else {
             Intake.setVelocity(0);
         }
         double velocity;
         // Launching
-        if (gamepad2.b) {
-            velocity = 2500;
-        } else if (gamepad2.y) {
-            velocity = 2500;
+        if (gamepad2.b) { // Far Shoot
+            velocity = 2300;
+        } else if (gamepad2.y) { // Near Shoot
+            velocity = 2000;
         } else {
             velocity = 0;
         }
@@ -141,9 +142,7 @@ public class Macanum_Default_TeleOp extends OpMode {
 
         double m = 1;
 
-        if (gamepad1.left_bumper) {
-            m = 0.5;
-        }
+        m -= gamepad1.right_trigger/2;
 
         double d = Math.max(Math.abs(x)+Math.abs(y)+Math.abs(r),1)/m;
 

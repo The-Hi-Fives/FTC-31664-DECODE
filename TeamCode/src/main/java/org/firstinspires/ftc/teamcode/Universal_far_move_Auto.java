@@ -55,6 +55,7 @@ public class Universal_far_move_Auto extends LinearOpMode {
         FrontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         BackRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         RightLaunch.setDirection(DcMotorSimple.Direction.REVERSE);
+        Conveyor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         waitForStart();
 

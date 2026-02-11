@@ -105,6 +105,7 @@ public class Universal_far_Launch_Auto extends LinearOpMode {
         FrontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         BackRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         RightLaunch.setDirection(DcMotorSimple.Direction.REVERSE);
+        Conveyor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         waitForStart();
 
@@ -113,8 +114,8 @@ public class Universal_far_Launch_Auto extends LinearOpMode {
 
         aim_bot(20);
 
-        LeftLaunch.setVelocity(2500);
-        RightLaunch.setVelocity(2500);
+        LeftLaunch.setVelocity(2300);
+        RightLaunch.setVelocity(2300);
 
         while (RightLaunch.getVelocity() != 2500 || LeftLaunch.getVelocity() != 2500){
             sleep(50);

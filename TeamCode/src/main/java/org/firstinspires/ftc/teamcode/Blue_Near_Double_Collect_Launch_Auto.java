@@ -14,7 +14,7 @@ import java.util.List;
 public class Blue_Near_Double_Collect_Launch_Auto extends LinearOpMode {
     DcMotorEx FrontRightMotor, BackRightMotor, FrontLeftMotor, BackLeftMotor, Intake, LeftLaunch, RightLaunch, Conveyor;
     HuskyLens Camera;
-    int launcherVelocity = 2500;
+    int launcherVelocity = 2000;
 
     public void Macanum(Double x,Double y,Double r,Integer Speed) {
         double d = Math.max(Math.abs(x)+Math.abs(y)+Math.abs(r),1);
@@ -99,7 +99,7 @@ public class Blue_Near_Double_Collect_Launch_Auto extends LinearOpMode {
         sleep(1000);
 
         // Enable Conveyor
-        Conveyor.setVelocity(500);
+        Conveyor.setVelocity(3000);
 
         int rounds = 0;
         int max_rounds = 60;
@@ -144,6 +144,7 @@ public class Blue_Near_Double_Collect_Launch_Auto extends LinearOpMode {
         FrontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         BackRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         RightLaunch.setDirection(DcMotorSimple.Direction.REVERSE);
+        Conveyor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         FrontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         BackRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
