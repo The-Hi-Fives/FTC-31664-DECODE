@@ -10,8 +10,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import java.util.Arrays;
 import java.util.List;
 
-@Autonomous(name="New Blue Near Launch Auto ", group="Default")
-public class New_Blue_Near_Launch_Auto extends LinearOpMode {
+@Autonomous(name="New blue Double Collect Near Launch Auto", group="Default")
+public class New_Blue_Near_Double_Collect_Launch_Auto extends LinearOpMode {
     DcMotorEx FrontRightMotor, BackRightMotor, FrontLeftMotor, BackLeftMotor, Intake, LeftLaunch, RightLaunch, Conveyor;
     HuskyLens Camera;
     public void setUp(){
@@ -49,11 +49,9 @@ public class New_Blue_Near_Launch_Auto extends LinearOpMode {
     }
     @Override
     public void runOpMode() throws InterruptedException {
+        /// FIRST
         setUp(); // set Up
         waitForStart(); // wait For Start
-
-        // Sequence
-        //Intake.setVelocity(2000); // Power Intake
 
         // head back to have space to launch, being close to but not touching/crossing the alliance line
         Macanum(0.0, -1.0, 0.0, 2000);
@@ -67,12 +65,86 @@ public class New_Blue_Near_Launch_Auto extends LinearOpMode {
 
         sleep(1000);
 
+        // Aim-bot for 2 seconds
+        aim_bot(40);
+
+        // Launch Artifact
+        launchArtifact(2300);
+
+        /// SECOND
+
+        // turn 135 degrees
+        Macanum(0.0,0.0,1.0,1800);
+        sleep(750);
+
+        // move to align
+        Macanum(1.0,0.0,0.0,1000);
+        sleep(200);
+
+        // move back to intake
+        Intake.setVelocity(2000);
+        Macanum(0.0,-1.0,0.0,1500);
+        sleep(1500);
+
+        // pause
+        Macanum(0.0,0.0,0.0,0);
+        sleep(500);
+
+        // back away from intake
+        Macanum(0.0,1.0,0.0,1500); 
+        sleep(1500);
+
+        // move to align
+        Intake.setVelocity(0);
+        Macanum(-1.0,0.0,0.0,1000);
+        sleep(200);
+
+        // rotate 135 in the other direction
+        Macanum(0.0,0.0,-1.0,1800);
+        sleep(750);
 
         // Aim-bot for 2 seconds
         aim_bot(40);
 
         // Launch Artifact
-        launchArtifact(2200);
+        launchArtifact(2300);
+
+        /// THIRD
+
+        // turn 135 degrees
+        Macanum(0.0,0.0,1.0,1800);
+        sleep(750);
+
+        // move to align in front of the second spike marks
+        Macanum(1.0,0.0,0.0,1000);
+        sleep(500);
+
+        // move back to intake
+        Intake.setVelocity(2000);
+        Macanum(0.0,-1.0,0.0,1500);
+        sleep(1800);
+
+        // pause
+        Macanum(0.0,0.0,0.0,0);
+        sleep(500);
+
+        // back away from intake
+        Macanum(0.0,1.0,0.0,1500);
+        sleep(1800);
+
+        // Move to align launching
+        Macanum(-1.0,0.0,0.0,1000);
+        sleep(500);
+
+        // turn 135 degrees in the other direction
+        Macanum(0.0,0.0,-1.0,1800);
+        sleep(750);
+
+        // Aim-bot for 2 seconds
+        aim_bot(40);
+
+        // Launch Artifact
+        launchArtifact(2300);
 
         // Get out of zone
         Macanum(1.0, 0.0, 0.0, 2000);
@@ -109,6 +181,10 @@ public class New_Blue_Near_Launch_Auto extends LinearOpMode {
 
         // wait long enough for the balls to be shot
         waitForArtifactUnload();
+        Intake.setVelocity(0);
+        Conveyor.setVelocity(0);
+        LeftLaunch.setVelocity(0);
+        RightLaunch.setVelocity(0);
     }
     public HuskyLens.Block getTag() {
         List<HuskyLens.Block> blocks = Arrays.asList(Camera.blocks());
@@ -130,7 +206,6 @@ public class New_Blue_Near_Launch_Auto extends LinearOpMode {
         return Math.max(min, Math.min(max, value));
     }
     public void aim_bot(int max_rounds) { // 1 round is 50 milliseconds
-        // If I wrote a book on how many times I had to change this code, then it's page count would rival the Bible's.
         HuskyLens.Block block;
         double screen_middle_x;
         int rounds = 0;

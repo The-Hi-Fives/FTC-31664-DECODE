@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import java.util.Arrays;
 import java.util.List;
 
-@Autonomous(name="New Super Red Near Launch Auto U", group="Default")
+@Autonomous(name="New Red Near Launch Auto ", group="Default")
 public class New_Red_Near_Launch_Auto extends LinearOpMode {
     DcMotorEx FrontRightMotor, BackRightMotor, FrontLeftMotor, BackLeftMotor, Intake, LeftLaunch, RightLaunch, Conveyor;
     HuskyLens Camera;
@@ -57,15 +57,22 @@ public class New_Red_Near_Launch_Auto extends LinearOpMode {
 
         // head back to have space to launch, being close to but not touching/crossing the alliance line
         Macanum(0.0, -1.0, 0.0, 2000);
-        sleep(1075); // How long you can drive back until you almost cross the alliance line
+        sleep(1050); // How long you can drive back until you almost cross the alliance line
 
         Macanum(0.0,0.0,0.0,0);
+        sleep(100);
+
+        // Move back more
+        Macanum(-1.0,-1.0,0.0,1000);
+
+        sleep(1000);
+
 
         // Aim-bot for 2 seconds
         aim_bot(40);
 
         // Launch Artifact
-        launchArtifact(2000);
+        launchArtifact(2200);
 
         // Get out of zone
         Macanum(-1.0, 0.0, 0.0, 2000);
@@ -137,7 +144,7 @@ public class New_Red_Near_Launch_Auto extends LinearOpMode {
                 Macanum(0.0,0.0,0.0,0);
                 continue;
             }
-            if (block.id != 1) {
+            if (block.id != 5) {
                 Macanum(0.0,0.0,0.0,0);
                 continue;
             }

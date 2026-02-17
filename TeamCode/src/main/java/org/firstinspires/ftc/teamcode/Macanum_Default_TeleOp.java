@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import java.util.Arrays;
 import java.util.List;
 
-@TeleOp(name="Macanum Default TeleOp", group="TeleOp")
+@TeleOp(name="Macanum Default TeleOp", group="A")
 public class Macanum_Default_TeleOp extends OpMode {
     DcMotorEx FrontRightMotor, BackRightMotor, FrontLeftMotor, BackLeftMotor, Intake, LeftLaunch, RightLaunch;
     DcMotorEx Conveyor;
@@ -111,10 +111,12 @@ public class Macanum_Default_TeleOp extends OpMode {
         }
         double velocity;
         // Launching
-        if (gamepad2.b) { // Far Shoot
-            velocity = 2300;
+        if (gamepad1.b && gamepad1.y) {
+            velocity = 2400;
+        } else if (gamepad2.b) { // Far Shoot
+            velocity = 2500;
         } else if (gamepad2.y) { // Near Shoot
-            velocity = 2000;
+            velocity = 2250;
         } else {
             velocity = 0;
         }
@@ -142,7 +144,11 @@ public class Macanum_Default_TeleOp extends OpMode {
 
         double m = 1;
 
-        m -= gamepad1.right_trigger/2;
+        m -= (gamepad1.right_trigger/4)*3;
+
+        if (gamepad1.right_bumper){
+            m = m/2;
+        }
 
         double d = Math.max(Math.abs(x)+Math.abs(y)+Math.abs(r),1)/m;
 

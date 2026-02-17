@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import java.util.Arrays;
 import java.util.List;
 
-@Autonomous(name="Red Near Collect Launch Auto", group="Default")
+@Autonomous(name="_old Red Near Collect Launch Auto", group="old")
 public class Red_Near_Collect_Launch_Auto extends LinearOpMode {
     DcMotorEx FrontRightMotor, BackRightMotor, FrontLeftMotor, BackLeftMotor, Intake, LeftLaunch, RightLaunch, Conveyor;
     HuskyLens Camera;

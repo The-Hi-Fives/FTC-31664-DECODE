@@ -19,6 +19,11 @@ public class Universal_far_Launch_Auto extends LinearOpMode {
     public void Macanum(Double x,Double y,Double r,Integer Speed) {
         double d = Math.max(Math.abs(x)+Math.abs(y)+Math.abs(r),1);
 
+        // turn y into x and vice versa
+        double send = -y;
+        y = x;
+        x = send;
+
         double FTVelocity = (x + y + r)/d * Speed; // Don't touch or it
         double BTVelocity = (x - y + r)/d * Speed; // may NEVER work again...
         double FRVelocity = (x - y - r)/d * Speed;
@@ -102,6 +107,11 @@ public class Universal_far_Launch_Auto extends LinearOpMode {
         RightLaunch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         Conveyor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        FrontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        BackRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        FrontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        BackLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         FrontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         BackRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         RightLaunch.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -112,21 +122,27 @@ public class Universal_far_Launch_Auto extends LinearOpMode {
         // Sequence
         Macanum(0.0,0.0,0.0,0);
 
-        aim_bot(20);
+        //aim_bot(20);
 
-        LeftLaunch.setVelocity(2300);
-        RightLaunch.setVelocity(2300);
+        int target_velocity = 2500;
 
-        while (RightLaunch.getVelocity() != 2500 || LeftLaunch.getVelocity() != 2500){
+        LeftLaunch.setVelocity(target_velocity);
+        RightLaunch.setVelocity(target_velocity);
+
+        Macanum(0.0,1.0,0.0,2000);
+        sleep(200);
+        Macanum(0.0,0.0,0.0,0);
+
+        while (RightLaunch.getVelocity() < target_velocity || LeftLaunch.getVelocity() < target_velocity){
             sleep(50);
         }
-        sleep(1000);
 
         Conveyor.setVelocity(3000);
+        Intake.setVelocity(2000);
 
-        sleep(5000);
-        Macanum(-1.0,0.0,0.0,2000);
-        sleep(500);
+        sleep(3000);
+        Macanum(-1.0,1.0,0.0,2000);
+        sleep(250);
         Macanum(0.0,0.0,0.0,0);
         // no telemetry
     }
